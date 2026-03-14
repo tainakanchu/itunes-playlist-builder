@@ -42,6 +42,11 @@ jobs:
 
       - run: pnpm test
 
+      - name: Verify npm token
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
@@ -52,12 +57,12 @@ jobs:
 
       - name: Lerna publish (dry-run)
         if: ${{ inputs.dry-run }}
-        run: npx lerna publish from-git --yes --dry-run
+        run: npx lerna publish from-git --yes --no-verify-access --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: Lerna publish
         if: ${{ !inputs.dry-run }}
-        run: npx lerna publish from-git --yes
+        run: npx lerna publish from-git --yes --no-verify-access
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
