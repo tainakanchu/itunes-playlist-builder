@@ -11,6 +11,7 @@ Publish packages to npm via the GitHub Actions publish workflow, then create a G
 ## Arguments
 
 When invoked as `/release`, arguments follow the skill name:
+
 - `<version>`: Required. `patch`, `minor`, `major`, or an exact semver like `0.3.0`
 - `--dry-run`: Optional. Runs the publish workflow in dry-run mode (no actual publish or release)
 
@@ -41,9 +42,11 @@ CONCLUSION=$(gh run view "$RUN_ID" --json conclusion --jq '.conclusion')
 ```
 
 If the run failed, show the error:
+
 ```bash
 gh run view "$RUN_ID" --log-failed 2>&1 | tail -30
 ```
+
 Report the failure with a link to the run and stop.
 
 ### 4. If dry-run, stop here
