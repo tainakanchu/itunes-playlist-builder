@@ -2,6 +2,7 @@
   "name": "@tainakanchu/itunes-playlist-builder-core",
   "version": "0.1.0",
   "type": "module",
+  "files": ["dist", "rules.schema.json"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

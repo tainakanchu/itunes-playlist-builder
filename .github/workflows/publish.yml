@@ -1,0 +1,71 @@
+name: Publish to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 0.1.0, 0.2.0-beta.1)"
+        required: true
+        type: string
+      dry-run:
+        description: "Dry run (skip actual publish)"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm format:check
+
+      - run: pnpm build
+
+      - run: pnpm typecheck
+
+      - run: pnpm test
+
+      - name: Set version
+        run: |
+          pnpm -r exec -- npm version ${{ inputs.version }} --no-git-tag-version --allow-same-version
+
+      - name: Publish core
+        if: ${{ !inputs.dry-run }}
+        run: pnpm --filter @tainakanchu/itunes-playlist-builder-core publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish cli
+        if: ${{ !inputs.dry-run }}
+        run: pnpm --filter @tainakanchu/itunes-playlist-builder-cli publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Dry run - show what would be published
+        if: ${{ inputs.dry-run }}
+        run: |
+          echo "=== core ==="
+          pnpm --filter @tainakanchu/itunes-playlist-builder-core publish --access public --no-git-checks --dry-run
+          echo ""
+          echo "=== cli ==="
+          pnpm --filter @tainakanchu/itunes-playlist-builder-cli publish --access public --no-git-checks --dry-run
+
+      - name: Create git tag
+        if: ${{ !inputs.dry-run }}
+        run: |
+          git tag "v${{ inputs.version }}"
+          git push origin "v${{ inputs.version }}"

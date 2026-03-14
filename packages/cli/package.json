@@ -2,6 +2,7 @@
   "name": "@tainakanchu/itunes-playlist-builder-cli",
   "version": "0.1.0",
   "type": "module",
+  "files": ["dist"],
   "bin": {
     "itunes-playlist-builder": "./dist/cli.js"
   },
