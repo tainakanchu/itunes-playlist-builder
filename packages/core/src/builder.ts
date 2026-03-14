@@ -25,7 +25,10 @@ function resolveOptions(rulesFile: RulesFile): BuildOptions {
 
 function buildConcreteRules(rulesFile: RulesFile): PlaylistRule[] {
   const concreteRules = [...rulesFile.playlists];
-  const generatorRules = expandGenerators(rulesFile.generators);
+  const generatorRules = expandGenerators(
+    rulesFile.generators,
+    rulesFile.templates
+  );
   return [...concreteRules, ...generatorRules];
 }
 

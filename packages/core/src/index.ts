@@ -37,7 +37,12 @@ export type {
   PlaylistRule,
   Condition,
   Generator,
+  GeneratorEntry,
+  GeneratorTemplate,
+  TemplateRefGenerator,
   BpmRangeGenerator,
+  RangesGenerator,
+  RangeEntry,
   PlaylistRef,
   SortRuleInput,
 } from "./ruleSchema.js";

@@ -62,6 +62,45 @@ const playlistRuleSchema = z.object({
   mode: z.string().optional(),
 });
 
+// --- Range entry (for ranges generator) ---
+
+const rangeEntrySchema = z.object({
+  name: z.string().optional(),
+  gte: z.number().optional(),
+  gt: z.number().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+});
+
+// --- Generator templates ---
+
+// BPM range template: reusable BPM bucket definition (no basePath/sourcePlaylist)
+const bpmRangeTemplateSchema = z.object({
+  type: z.literal("bpmRange"),
+  from: z.number(),
+  to: z.number(),
+  step: z.number(),
+  pad: z.number().optional().default(0),
+  sort: z.array(sortRuleSchema).optional(),
+});
+
+// Ranges template: named arbitrary ranges on any numeric field (overlaps OK)
+const rangesTemplateSchema = z.object({
+  type: z.literal("ranges"),
+  field: supportedFieldEnum,
+  ranges: z.array(rangeEntrySchema),
+  pad: z.number().optional().default(0),
+  sort: z.array(sortRuleSchema).optional(),
+});
+
+const generatorTemplateSchema = z.discriminatedUnion("type", [
+  bpmRangeTemplateSchema,
+  rangesTemplateSchema,
+]);
+
+// --- Generators (inline or template-ref) ---
+
+// Inline bpmRange
 const bpmRangeGeneratorSchema = z.object({
   type: z.literal("bpmRange"),
   basePath: z.string(),
@@ -73,7 +112,35 @@ const bpmRangeGeneratorSchema = z.object({
   sort: z.array(sortRuleSchema).optional(),
 });
 
-const generatorSchema = z.discriminatedUnion("type", [bpmRangeGeneratorSchema]);
+// Inline ranges
+const rangesGeneratorSchema = z.object({
+  type: z.literal("ranges"),
+  basePath: z.string(),
+  sourcePlaylist: playlistRefSchema,
+  field: supportedFieldEnum,
+  ranges: z.array(rangeEntrySchema),
+  pad: z.number().optional().default(0),
+  sort: z.array(sortRuleSchema).optional(),
+});
+
+// Template-ref: references a named template, supplies basePath + sourcePlaylist
+const templateRefGeneratorSchema = z.object({
+  template: z.string(),
+  basePath: z.string(),
+  sourcePlaylist: playlistRefSchema,
+  sort: z.array(sortRuleSchema).optional(),
+});
+
+const inlineGeneratorSchema = z.discriminatedUnion("type", [
+  bpmRangeGeneratorSchema,
+  rangesGeneratorSchema,
+]);
+
+// A generator entry is either inline or a template reference
+const generatorEntrySchema = z.union([
+  inlineGeneratorSchema,
+  templateRefGeneratorSchema,
+]);
 
 const optionsSchema = z.object({
   removeExistingNamespace: z.boolean().optional(),
@@ -86,13 +153,20 @@ export const rulesFileSchema = z.object({
   namespace: z.string(),
   options: optionsSchema.optional(),
   playlists: z.array(playlistRuleSchema).optional().default([]),
-  generators: z.array(generatorSchema).optional().default([]),
+  templates: z.record(z.string(), generatorTemplateSchema).optional(),
+  generators: z.array(generatorEntrySchema).optional().default([]),
 });
 
 export type RulesFile = z.infer<typeof rulesFileSchema>;
 export type PlaylistRule = z.infer<typeof playlistRuleSchema>;
 export type Condition = z.infer<typeof conditionSchema>;
-export type Generator = z.infer<typeof generatorSchema>;
+export type InlineGenerator = z.infer<typeof inlineGeneratorSchema>;
+export type TemplateRefGenerator = z.infer<typeof templateRefGeneratorSchema>;
+export type GeneratorEntry = z.infer<typeof generatorEntrySchema>;
+export type Generator = z.infer<typeof inlineGeneratorSchema>;
 export type BpmRangeGenerator = z.infer<typeof bpmRangeGeneratorSchema>;
+export type RangesGenerator = z.infer<typeof rangesGeneratorSchema>;
+export type RangeEntry = z.infer<typeof rangeEntrySchema>;
+export type GeneratorTemplate = z.infer<typeof generatorTemplateSchema>;
 export type PlaylistRef = z.infer<typeof playlistRefSchema>;
 export type SortRuleInput = z.infer<typeof sortRuleSchema>;

@@ -6,6 +6,49 @@ options:
   dedupeTrackIds: true
   caseSensitiveContains: false
 
+# Reusable generator templates
+templates:
+  bpmBuckets:
+    type: bpmRange
+    from: 70
+    to: 180
+    step: 5
+    pad: 3
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+      - field: name
+        order: asc
+
+  # DJ-oriented overlapping BPM zones
+  djZones:
+    type: ranges
+    field: bpm
+    pad: 0
+    ranges:
+      - name: "Slow"
+        gte: 70
+        lt: 105
+      - name: "House"
+        gte: 118
+        lt: 138
+      - name: "Techno"
+        gte: 125
+        lt: 148
+      - name: "Trance"
+        gte: 132
+        lt: 155
+      - name: "DnB"
+        gte: 160
+        lt: 185
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+
 playlists:
   # Base favorites: 4 stars and above (rating >= 80)
   - name: "Base/Favorites/4stars+"
@@ -41,7 +84,7 @@ playlists:
       - field: name
         order: asc
 
-  # Genre: House favorites
+  # Genre playlists
   - name: "Genre/House/All"
     description: "All House genre tracks with 4+ stars"
     match:
@@ -57,7 +100,6 @@ playlists:
       - field: artist
         order: asc
 
-  # Genre: Techno favorites
   - name: "Genre/Techno/All"
     description: "All Techno genre tracks with 4+ stars"
     match:
@@ -73,7 +115,6 @@ playlists:
       - field: artist
         order: asc
 
-  # Genre: Trance favorites
   - name: "Genre/Trance/All"
     description: "All Trance genre tracks with 4+ stars"
     match:
@@ -89,7 +130,7 @@ playlists:
       - field: artist
         order: asc
 
-  # Recently added high-rated tracks
+  # High play count
   - name: "Base/HighPlayCount"
     description: "Tracks played more than 10 times"
     match:
@@ -106,20 +147,34 @@ playlists:
         order: asc
 
 generators:
-  # BPM buckets for favorites
-  - type: bpmRange
+  # BPM buckets reused across multiple sources
+  - template: bpmBuckets
     basePath: "BPM/Favorites"
     sourcePlaylist:
       source: generated
       name: "Base/Favorites/4stars+"
-    from: 70
-    to: 180
-    step: 5
-    pad: 3
-    sort:
-      - field: bpm
-        order: asc
-      - field: artist
-        order: asc
-      - field: name
-        order: asc
+
+  - template: bpmBuckets
+    basePath: "Genre/House/BPM"
+    sourcePlaylist:
+      source: generated
+      name: "Genre/House/All"
+
+  - template: bpmBuckets
+    basePath: "Genre/Techno/BPM"
+    sourcePlaylist:
+      source: generated
+      name: "Genre/Techno/All"
+
+  - template: bpmBuckets
+    basePath: "Genre/Trance/BPM"
+    sourcePlaylist:
+      source: generated
+      name: "Genre/Trance/All"
+
+  # Overlapping DJ zones for favorites
+  - template: djZones
+    basePath: "DJ/Zones"
+    sourcePlaylist:
+      source: generated
+      name: "Base/Favorites/4stars+"

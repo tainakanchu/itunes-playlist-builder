@@ -1,0 +1,58 @@
+namespace: "_Generated"
+
+options:
+  removeExistingNamespace: true
+  failOnMissingPlaylist: false
+  dedupeTrackIds: true
+
+# Reusable templates
+templates:
+  bpmBuckets:
+    type: bpmRange
+    from: 120
+    to: 140
+    step: 5
+    pad: 3
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+
+playlists:
+  # Base genre playlists
+  - name: "Genre/House/All"
+    match:
+      all:
+        - field: rating
+          gte: 80
+        - field: genre
+          contains: "House"
+        - not:
+            field: podcast
+            equals: true
+
+  - name: "Genre/Techno/All"
+    match:
+      all:
+        - field: rating
+          gte: 80
+        - field: genre
+          contains: "Techno"
+        - not:
+            field: podcast
+            equals: true
+
+generators:
+  # Reuse the same BPM buckets under each genre
+  - template: bpmBuckets
+    basePath: "Genre/House/BPM"
+    sourcePlaylist:
+      source: generated
+      name: "Genre/House/All"
+
+  - template: bpmBuckets
+    basePath: "Genre/Techno/BPM"
+    sourcePlaylist:
+      source: generated
+      name: "Genre/Techno/All"

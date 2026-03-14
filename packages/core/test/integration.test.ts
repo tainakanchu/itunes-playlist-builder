@@ -240,4 +240,74 @@ playlists:
       );
     });
   });
+
+  describe("templates", () => {
+    const xml = loadFixture("library.minimal.xml");
+    const rules = loadFixture("rules.templates.yml");
+
+    it("expands template references under multiple genres", () => {
+      const library = parseLibraryXml(xml);
+      const rulesFile = parseRulesYaml(rules);
+      const result = evaluateLibrary(library, rulesFile);
+
+      // Should have: Genre/House/All, Genre/Techno/All
+      // + 4 BPM buckets under House + 4 BPM buckets under Techno
+      const houseBpm = result.generated.filter((p) =>
+        p.path.startsWith("Genre/House/BPM/")
+      );
+      const technoBpm = result.generated.filter((p) =>
+        p.path.startsWith("Genre/Techno/BPM/")
+      );
+
+      expect(houseBpm).toHaveLength(4);
+      expect(technoBpm).toHaveLength(4);
+
+      // Same bucket names under each genre
+      expect(houseBpm.map((p) => p.name)).toEqual(
+        technoBpm.map((p) => p.name)
+      );
+    });
+
+    it("template-generated playlists source from correct parent", () => {
+      const library = parseLibraryXml(xml);
+      const rulesFile = parseRulesYaml(rules);
+      const result = evaluateLibrary(library, rulesFile);
+
+      // Track 100: House, BPM=128, rating=100 -> Genre/House/BPM/125-129
+      const houseBpm125 = result.generated.find(
+        (p) => p.path === "Genre/House/BPM/125-129"
+      );
+      expect(houseBpm125).toBeDefined();
+      expect(houseBpm125!.trackIds).toContain(100);
+
+      // Track 101: Techno, BPM=135, rating=80 -> Genre/Techno/BPM/135-139
+      const technoBpm135 = result.generated.find(
+        (p) => p.path === "Genre/Techno/BPM/135-139"
+      );
+      expect(technoBpm135).toBeDefined();
+      expect(technoBpm135!.trackIds).toContain(101);
+
+      // House BPM should NOT contain Techno tracks
+      const allHouseBpmTracks = result.generated
+        .filter((p) => p.path.startsWith("Genre/House/BPM/"))
+        .flatMap((p) => p.trackIds);
+      expect(allHouseBpmTracks).not.toContain(101); // Techno track
+    });
+
+    it("folder tree has correct structure", () => {
+      const library = parseLibraryXml(xml);
+      const rulesFile = parseRulesYaml(rules);
+      const result = evaluateLibrary(library, rulesFile);
+
+      const preview = renderPreview({
+        tree: result.tree,
+        playlistCount: result.playlistCount,
+        folderCount: result.folderCount,
+      });
+      expect(preview).toContain("Genre");
+      expect(preview).toContain("House");
+      expect(preview).toContain("Techno");
+      expect(preview).toContain("BPM");
+    });
+  });
 });
