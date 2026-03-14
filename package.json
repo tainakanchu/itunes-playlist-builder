@@ -10,9 +10,13 @@
     "test": "turbo test",
     "typecheck": "turbo typecheck",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "publish:npm": "pnpm build && lerna publish"
   },
   "devDependencies": {
+    "@lerna-lite/cli": "^4.11.5",
+    "@lerna-lite/publish": "^4.11.5",
+    "@lerna-lite/version": "^4.11.5",
     "prettier": "^3.8.1",
     "turbo": "^2.8.17"
   }

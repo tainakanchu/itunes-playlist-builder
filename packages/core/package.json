@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "type": "module",
   "files": ["dist", "rules.schema.json"],
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
