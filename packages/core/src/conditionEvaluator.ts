@@ -12,11 +12,7 @@ function compareStrings(a: string, b: string, caseSensitive: boolean): boolean {
   return a.toLowerCase() === b.toLowerCase();
 }
 
-function stringContains(
-  haystack: string,
-  needle: string,
-  caseSensitive: boolean
-): boolean {
+function stringContains(haystack: string, needle: string, caseSensitive: boolean): boolean {
   if (caseSensitive) return haystack.includes(needle);
   return haystack.toLowerCase().includes(needle.toLowerCase());
 }
@@ -24,7 +20,7 @@ function stringContains(
 function evaluateFieldCondition(
   track: Track,
   condition: Record<string, unknown>,
-  options: BuildOptions
+  options: BuildOptions,
 ): boolean {
   const field = condition["field"] as string;
   const value = getFieldValue(track, field);
@@ -50,11 +46,7 @@ function evaluateFieldCondition(
   if ("contains" in condition) {
     const needle = condition["contains"] as string;
     if (value === undefined || value === null) return false;
-    return stringContains(
-      String(value),
-      needle,
-      options.caseSensitiveContains
-    );
+    return stringContains(String(value), needle, options.caseSensitiveContains);
   }
 
   if ("in" in condition) {
@@ -95,22 +87,18 @@ export function evaluateCondition(
   track: Track,
   condition: Condition,
   options: BuildOptions,
-  playlistLookup: PlaylistLookup
+  playlistLookup: PlaylistLookup,
 ): boolean {
   const cond = condition as Record<string, unknown>;
 
   if ("all" in cond) {
     const children = cond["all"] as Condition[];
-    return children.every((child) =>
-      evaluateCondition(track, child, options, playlistLookup)
-    );
+    return children.every((child) => evaluateCondition(track, child, options, playlistLookup));
   }
 
   if ("any" in cond) {
     const children = cond["any"] as Condition[];
-    return children.some((child) =>
-      evaluateCondition(track, child, options, playlistLookup)
-    );
+    return children.some((child) => evaluateCondition(track, child, options, playlistLookup));
   }
 
   if ("not" in cond) {

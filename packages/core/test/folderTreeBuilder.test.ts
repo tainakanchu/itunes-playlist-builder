@@ -42,9 +42,7 @@ describe("folderTreeBuilder", () => {
     const tree = buildFolderTree("_Gen", playlists);
     expect(tree.children).toHaveLength(2); // Base, Genre
 
-    const base = tree.children.find(
-      (c) => c.type === "folder" && c.name === "Base"
-    );
+    const base = tree.children.find((c) => c.type === "folder" && c.name === "Base");
     expect(base).toBeDefined();
     expect(base!.type).toBe("folder");
 

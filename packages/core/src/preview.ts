@@ -4,7 +4,7 @@ function renderTreeLines(
   node: FolderNode | PlaylistNode,
   prefix: string,
   isLast: boolean,
-  isRoot: boolean
+  isRoot: boolean,
 ): string[] {
   const lines: string[] = [];
 
@@ -71,6 +71,6 @@ export function renderPreviewJson(result: PreviewResult): string {
       folderCount: result.folderCount,
     },
     null,
-    2
+    2,
   );
 }

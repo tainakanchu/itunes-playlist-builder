@@ -25,9 +25,7 @@ describe("integration", () => {
 
       // Base/Favorites/4stars+ should match tracks 100 (rating=100), 101 (rating=80), 103 (rating=100), 106 (rating=80)
       // But 105 is podcast so excluded
-      const fourStars = result.generated.find(
-        (p) => p.path === "Base/Favorites/4stars+"
-      );
+      const fourStars = result.generated.find((p) => p.path === "Base/Favorites/4stars+");
       expect(fourStars).toBeDefined();
       expect(fourStars!.trackIds).toHaveLength(4);
       expect(fourStars!.trackIds).toContain(100);
@@ -43,9 +41,7 @@ describe("integration", () => {
       const rulesFile = parseRulesYaml(rules);
       const result = evaluateLibrary(library, rulesFile);
 
-      const houseAll = result.generated.find(
-        (p) => p.path === "Genre/House/All"
-      );
+      const houseAll = result.generated.find((p) => p.path === "Genre/House/All");
       expect(houseAll).toBeDefined();
       // Track 100 (House, rating=100) and 106 (Tech House, rating=80) match
       expect(houseAll!.trackIds).toContain(100);
@@ -59,9 +55,7 @@ describe("integration", () => {
       const rulesFile = parseRulesYaml(rules);
       const result = evaluateLibrary(library, rulesFile);
 
-      const fromFavorites = result.generated.find(
-        (p) => p.path === "Existing/FromFavorites"
-      );
+      const fromFavorites = result.generated.find((p) => p.path === "Existing/FromFavorites");
       expect(fromFavorites).toBeDefined();
       expect(fromFavorites!.trackIds).toContain(100);
       expect(fromFavorites!.trackIds).toContain(103);
@@ -72,9 +66,7 @@ describe("integration", () => {
       const rulesFile = parseRulesYaml(rules);
       const result = evaluateLibrary(library, rulesFile);
 
-      const houseMinusExclude = result.generated.find(
-        (p) => p.path === "SetOps/HouseMinusExclude"
-      );
+      const houseMinusExclude = result.generated.find((p) => p.path === "SetOps/HouseMinusExclude");
       expect(houseMinusExclude).toBeDefined();
       // House Set has [100, 102, 104], Exclude has [104]
       // Result should be [100, 102]
@@ -86,10 +78,7 @@ describe("integration", () => {
     it("preview renders tree correctly", () => {
       const library = parseLibraryXml(xml);
       const rulesFile = parseRulesYaml(rules);
-      const { tree, playlistCount, folderCount } = evaluateLibrary(
-        library,
-        rulesFile
-      );
+      const { tree, playlistCount, folderCount } = evaluateLibrary(library, rulesFile);
       const preview = renderPreview({ tree, playlistCount, folderCount });
       expect(preview).toContain("_Generated");
       expect(preview).toContain("4stars+");
@@ -108,18 +97,11 @@ describe("integration", () => {
       const result = evaluateLibrary(library, rulesFile);
 
       // BPM range from 120 to 140, step 5 = 4 buckets
-      const bpmPlaylists = result.generated.filter((p) =>
-        p.path.startsWith("BPM/")
-      );
+      const bpmPlaylists = result.generated.filter((p) => p.path.startsWith("BPM/"));
       expect(bpmPlaylists).toHaveLength(4);
 
       // Check bucket names
-      expect(bpmPlaylists.map((p) => p.name)).toEqual([
-        "120-124",
-        "125-129",
-        "130-134",
-        "135-139",
-      ]);
+      expect(bpmPlaylists.map((p) => p.name)).toEqual(["120-124", "125-129", "130-134", "135-139"]);
     });
 
     it("correctly distributes tracks to BPM buckets", () => {
@@ -155,7 +137,7 @@ describe("integration", () => {
         rulesFile.namespace,
         tree,
         [],
-        options.removeExistingNamespace
+        options.removeExistingNamespace,
       );
 
       const outputXml = buildPlistXml(merged);
@@ -182,15 +164,13 @@ describe("integration", () => {
         rulesFile.namespace,
         tree,
         [],
-        options.removeExistingNamespace
+        options.removeExistingNamespace,
       );
 
       const reparsed = parseLibraryXml(buildPlistXml(merged));
 
       // Find the generated 4stars+ playlist
-      const genFourStars = reparsed.playlists.find(
-        (p) => p.name === "4stars+"
-      );
+      const genFourStars = reparsed.playlists.find((p) => p.name === "4stars+");
       expect(genFourStars).toBeDefined();
       expect(genFourStars!.trackIds).toContain(100);
     });
@@ -214,9 +194,7 @@ playlists:
 `;
       const library = parseLibraryXml(xml);
       const rulesFile = parseRulesYaml(rulesYaml);
-      expect(() => evaluateLibrary(library, rulesFile)).toThrow(
-        "references later playlist"
-      );
+      expect(() => evaluateLibrary(library, rulesFile)).toThrow("references later playlist");
     });
 
     it("throws on duplicate playlist path", () => {
@@ -235,9 +213,7 @@ playlists:
 `;
       const library = parseLibraryXml(xml);
       const rulesFile = parseRulesYaml(rulesYaml);
-      expect(() => evaluateLibrary(library, rulesFile)).toThrow(
-        "Duplicate"
-      );
+      expect(() => evaluateLibrary(library, rulesFile)).toThrow("Duplicate");
     });
   });
 
@@ -252,20 +228,14 @@ playlists:
 
       // Should have: Genre/House/All, Genre/Techno/All
       // + 4 BPM buckets under House + 4 BPM buckets under Techno
-      const houseBpm = result.generated.filter((p) =>
-        p.path.startsWith("Genre/House/BPM/")
-      );
-      const technoBpm = result.generated.filter((p) =>
-        p.path.startsWith("Genre/Techno/BPM/")
-      );
+      const houseBpm = result.generated.filter((p) => p.path.startsWith("Genre/House/BPM/"));
+      const technoBpm = result.generated.filter((p) => p.path.startsWith("Genre/Techno/BPM/"));
 
       expect(houseBpm).toHaveLength(4);
       expect(technoBpm).toHaveLength(4);
 
       // Same bucket names under each genre
-      expect(houseBpm.map((p) => p.name)).toEqual(
-        technoBpm.map((p) => p.name)
-      );
+      expect(houseBpm.map((p) => p.name)).toEqual(technoBpm.map((p) => p.name));
     });
 
     it("template-generated playlists source from correct parent", () => {
@@ -274,16 +244,12 @@ playlists:
       const result = evaluateLibrary(library, rulesFile);
 
       // Track 100: House, BPM=128, rating=100 -> Genre/House/BPM/125-129
-      const houseBpm125 = result.generated.find(
-        (p) => p.path === "Genre/House/BPM/125-129"
-      );
+      const houseBpm125 = result.generated.find((p) => p.path === "Genre/House/BPM/125-129");
       expect(houseBpm125).toBeDefined();
       expect(houseBpm125!.trackIds).toContain(100);
 
       // Track 101: Techno, BPM=135, rating=80 -> Genre/Techno/BPM/135-139
-      const technoBpm135 = result.generated.find(
-        (p) => p.path === "Genre/Techno/BPM/135-139"
-      );
+      const technoBpm135 = result.generated.find((p) => p.path === "Genre/Techno/BPM/135-139");
       expect(technoBpm135).toBeDefined();
       expect(technoBpm135!.trackIds).toContain(101);
 

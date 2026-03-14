@@ -9,15 +9,13 @@ export function parseRulesYaml(yamlContent: string): RulesFile {
     raw = YAML.parse(yamlContent);
   } catch (e) {
     throw new RuleValidationError(
-      `Failed to parse YAML: ${e instanceof Error ? e.message : String(e)}`
+      `Failed to parse YAML: ${e instanceof Error ? e.message : String(e)}`,
     );
   }
 
   const result = rulesFileSchema.safeParse(raw);
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => `  ${i.path.join(".")}: ${i.message}`)
-      .join("\n");
+    const issues = result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n");
     throw new RuleValidationError(`Rule validation failed:\n${issues}`);
   }
 

@@ -59,6 +59,7 @@ Summary:
 ```
 
 Options:
+
 - `--json` for machine-readable output
 - `--verbose` for detailed rule info
 
@@ -72,6 +73,7 @@ npx tsx packages/cli/src/cli.ts build \
 ```
 
 Options:
+
 - `--dry-run` to evaluate and preview without writing
 
 ## Rules File Format
@@ -139,16 +141,16 @@ generators:
 
 ### Field comparisons
 
-| Operator | Description |
-|----------|-------------|
-| `equals` | Exact match (strings are case-insensitive by default) |
-| `contains` | Substring match |
-| `in` | Value in list |
-| `gt` | Greater than |
-| `gte` | Greater than or equal |
-| `lt` | Less than |
-| `lte` | Less than or equal |
-| `exists` | Field is present (true) or absent (false) |
+| Operator   | Description                                           |
+| ---------- | ----------------------------------------------------- |
+| `equals`   | Exact match (strings are case-insensitive by default) |
+| `contains` | Substring match                                       |
+| `in`       | Value in list                                         |
+| `gt`       | Greater than                                          |
+| `gte`      | Greater than or equal                                 |
+| `lt`       | Less than                                             |
+| `lte`      | Less than or equal                                    |
+| `exists`   | Field is present (true) or absent (false)             |
 
 ### Logical operators
 
@@ -160,7 +162,7 @@ generators:
 
 ```yaml
 - inPlaylist:
-    source: existing    # or "generated"
+    source: existing # or "generated"
     name: "My Playlist"
 ```
 

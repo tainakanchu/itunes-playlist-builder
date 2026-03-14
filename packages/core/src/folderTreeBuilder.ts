@@ -1,9 +1,6 @@
 import type { FolderNode, PlaylistNode, GeneratedPlaylist } from "./models.js";
 
-export function buildFolderTree(
-  namespace: string,
-  playlists: GeneratedPlaylist[]
-): FolderNode {
+export function buildFolderTree(namespace: string, playlists: GeneratedPlaylist[]): FolderNode {
   const root: FolderNode = {
     type: "folder",
     name: namespace,

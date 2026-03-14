@@ -168,9 +168,7 @@ describe("generatorExpander", () => {
         sourcePlaylist: { source: "generated", name: "Base/All" },
       };
 
-      expect(() => expandGenerators([ref], templates)).toThrow(
-        'unknown template "nonExistent"'
-      );
+      expect(() => expandGenerators([ref], templates)).toThrow('unknown template "nonExistent"');
     });
 
     it("can mix inline and template-ref generators", () => {

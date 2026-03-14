@@ -8,11 +8,7 @@ export { evaluateRules } from "./ruleEvaluator.js";
 export { expandGenerators } from "./generatorExpander.js";
 export { sortTrackIds } from "./sorter.js";
 export { buildFolderTree, countNodes } from "./folderTreeBuilder.js";
-export {
-  mergeGeneratedPlaylists,
-  buildPlistXml,
-  writePlistFile,
-} from "./xmlWriter.js";
+export { mergeGeneratedPlaylists, buildPlistXml, writePlistFile } from "./xmlWriter.js";
 export { renderTree, renderPreview, renderPreviewJson } from "./preview.js";
 
 // Types

@@ -12,9 +12,7 @@ const program = new Command();
 
 program
   .name("itunes-playlist-builder")
-  .description(
-    "Build declarative playlists from iTunes Library.xml and rules YAML"
-  )
+  .description("Build declarative playlists from iTunes Library.xml and rules YAML")
   .version("0.1.0");
 
 program
@@ -47,9 +45,7 @@ program
       console.log(`  Generated folders: ${result.generatedFolderCount}`);
       console.log(`  Output: ${result.outputXmlPath}`);
     } catch (e) {
-      console.error(
-        `Error: ${e instanceof Error ? e.message : String(e)}`
-      );
+      console.error(`Error: ${e instanceof Error ? e.message : String(e)}`);
       process.exit(1);
     }
   });
@@ -74,9 +70,7 @@ program
         console.log(renderPreview(result));
       }
     } catch (e) {
-      console.error(
-        `Error: ${e instanceof Error ? e.message : String(e)}`
-      );
+      console.error(`Error: ${e instanceof Error ? e.message : String(e)}`);
       process.exit(1);
     }
   });

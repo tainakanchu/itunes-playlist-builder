@@ -53,11 +53,7 @@ function normalizeTrack(raw: PlistTrackDict): Track {
 
     if (modelKey === "dateAdded" || modelKey === "dateModified") {
       track[modelKey] = value instanceof Date ? value : new Date(value as string);
-    } else if (
-      modelKey === "compilation" ||
-      modelKey === "podcast" ||
-      modelKey === "disabled"
-    ) {
+    } else if (modelKey === "compilation" || modelKey === "podcast" || modelKey === "disabled") {
       track[modelKey] = Boolean(value);
     } else if (
       modelKey === "trackId" ||
@@ -159,7 +155,7 @@ export function parseLibraryXml(xmlContent: string): Library {
     parsed = plist.parse(xmlContent) as Record<string, unknown>;
   } catch (e) {
     throw new LibraryParseError(
-      `Failed to parse plist XML: ${e instanceof Error ? e.message : String(e)}`
+      `Failed to parse plist XML: ${e instanceof Error ? e.message : String(e)}`,
     );
   }
 

@@ -19,9 +19,7 @@ describe("sorter", () => {
       { trackId: 3, bpm: 130 },
     ]);
 
-    const result = sortTrackIds([1, 2, 3], tracks, [
-      { field: "bpm", order: "asc" },
-    ]);
+    const result = sortTrackIds([1, 2, 3], tracks, [{ field: "bpm", order: "asc" }]);
     expect(result).toEqual([2, 3, 1]);
   });
 
@@ -32,9 +30,7 @@ describe("sorter", () => {
       { trackId: 3, bpm: 130 },
     ]);
 
-    const result = sortTrackIds([1, 2, 3], tracks, [
-      { field: "bpm", order: "desc" },
-    ]);
+    const result = sortTrackIds([1, 2, 3], tracks, [{ field: "bpm", order: "desc" }]);
     expect(result).toEqual([2, 3, 1]);
   });
 
@@ -45,22 +41,14 @@ describe("sorter", () => {
       { trackId: 3, artist: "Beta" },
     ]);
 
-    const result = sortTrackIds([1, 2, 3], tracks, [
-      { field: "artist", order: "asc" },
-    ]);
+    const result = sortTrackIds([1, 2, 3], tracks, [{ field: "artist", order: "asc" }]);
     expect(result).toEqual([2, 3, 1]);
   });
 
   it("puts undefined values last", () => {
-    const tracks = makeTracks([
-      { trackId: 1, bpm: 130 },
-      { trackId: 2 },
-      { trackId: 3, bpm: 120 },
-    ]);
+    const tracks = makeTracks([{ trackId: 1, bpm: 130 }, { trackId: 2 }, { trackId: 3, bpm: 120 }]);
 
-    const result = sortTrackIds([1, 2, 3], tracks, [
-      { field: "bpm", order: "asc" },
-    ]);
+    const result = sortTrackIds([1, 2, 3], tracks, [{ field: "bpm", order: "asc" }]);
     expect(result).toEqual([3, 1, 2]);
   });
 
@@ -81,11 +69,7 @@ describe("sorter", () => {
   });
 
   it("returns input unchanged when no sort rules", () => {
-    const tracks = makeTracks([
-      { trackId: 3 },
-      { trackId: 1 },
-      { trackId: 2 },
-    ]);
+    const tracks = makeTracks([{ trackId: 3 }, { trackId: 1 }, { trackId: 2 }]);
 
     const result = sortTrackIds([3, 1, 2], tracks, []);
     expect(result).toEqual([3, 1, 2]);

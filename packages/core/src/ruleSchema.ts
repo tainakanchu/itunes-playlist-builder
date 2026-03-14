@@ -15,7 +15,17 @@ const playlistRefSchema = z.object({
 
 // Forward declaration for recursive condition
 type ConditionInput =
-  | { field: string; equals?: unknown; contains?: string; in?: unknown[]; gt?: number; gte?: number; lt?: number; lte?: number; exists?: boolean }
+  | {
+      field: string;
+      equals?: unknown;
+      contains?: string;
+      in?: unknown[];
+      gt?: number;
+      gte?: number;
+      lt?: number;
+      lte?: number;
+      exists?: boolean;
+    }
   | { inPlaylist: { source: "existing" | "generated"; name: string } }
   | { all: ConditionInput[] }
   | { any: ConditionInput[] }
@@ -45,7 +55,7 @@ const conditionSchema: z.ZodType<ConditionInput> = z.lazy(() =>
     z.object({ not: conditionSchema }),
     playlistMembershipSchema,
     fieldConditionSchema,
-  ])
+  ]),
 );
 
 const matchSchema = z.union([
@@ -157,10 +167,7 @@ const inlineGeneratorSchema = z.discriminatedUnion("type", [
 ]);
 
 // A generator entry is either inline or a template reference
-const generatorEntrySchema = z.union([
-  inlineGeneratorSchema,
-  templateRefGeneratorSchema,
-]);
+const generatorEntrySchema = z.union([inlineGeneratorSchema, templateRefGeneratorSchema]);
 
 const optionsSchema = z.object({
   removeExistingNamespace: z.boolean().optional(),

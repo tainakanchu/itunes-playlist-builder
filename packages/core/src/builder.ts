@@ -1,11 +1,5 @@
 import { readFileSync } from "node:fs";
-import type {
-  BuildParams,
-  BuildResult,
-  BuildOptions,
-  PreviewResult,
-  Library,
-} from "./models.js";
+import type { BuildParams, BuildResult, BuildOptions, PreviewResult, Library } from "./models.js";
 import { DEFAULT_BUILD_OPTIONS } from "./models.js";
 import { parseLibraryXml } from "./libraryParser.js";
 import { parseRulesYaml } from "./ruleParser.js";
@@ -25,27 +19,15 @@ function resolveOptions(rulesFile: RulesFile): BuildOptions {
 
 function buildConcreteRules(rulesFile: RulesFile): PlaylistRule[] {
   const concreteRules = [...rulesFile.playlists];
-  const generatorRules = expandGenerators(
-    rulesFile.generators,
-    rulesFile.templates
-  );
+  const generatorRules = expandGenerators(rulesFile.generators, rulesFile.templates);
   return [...concreteRules, ...generatorRules];
 }
 
-export function evaluateLibrary(
-  library: Library,
-  rulesFile: RulesFile
-) {
+export function evaluateLibrary(library: Library, rulesFile: RulesFile) {
   const options = resolveOptions(rulesFile);
   const allRules = buildConcreteRules(rulesFile);
   const registry = new PlaylistRegistry(library.playlists, options);
-  const generated = evaluateRules(
-    allRules,
-    rulesFile.namespace,
-    library.tracks,
-    registry,
-    options
-  );
+  const generated = evaluateRules(allRules, rulesFile.namespace, library.tracks, registry, options);
   const tree = buildFolderTree(rulesFile.namespace, generated);
   const { folderCount, playlistCount } = countNodes(tree);
 
@@ -59,17 +41,14 @@ export async function buildLibrary(params: BuildParams): Promise<BuildResult> {
   const library = parseLibraryXml(xmlContent);
   const rulesFile = parseRulesYaml(rulesContent);
 
-  const { tree, folderCount, playlistCount, options } = evaluateLibrary(
-    library,
-    rulesFile
-  );
+  const { tree, folderCount, playlistCount, options } = evaluateLibrary(library, rulesFile);
 
   const mergedPlist = mergeGeneratedPlaylists(
     library.rawPlist,
     rulesFile.namespace,
     tree,
     [],
-    options.removeExistingNamespace
+    options.removeExistingNamespace,
   );
 
   writePlistFile(params.outputXmlPath, mergedPlist);
@@ -91,10 +70,7 @@ export async function previewLibrary(params: {
   const library = parseLibraryXml(xmlContent);
   const rulesFile = parseRulesYaml(rulesContent);
 
-  const { tree, folderCount, playlistCount } = evaluateLibrary(
-    library,
-    rulesFile
-  );
+  const { tree, folderCount, playlistCount } = evaluateLibrary(library, rulesFile);
 
   return {
     tree,

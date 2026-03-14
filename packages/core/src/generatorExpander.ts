@@ -42,10 +42,7 @@ function expandBpmRange(gen: BpmRangeGenerator): PlaylistRule[] {
   return rules;
 }
 
-function buildRangeName(
-  range: RangeEntry,
-  padWidth: number
-): string {
+function buildRangeName(range: RangeEntry, padWidth: number): string {
   if (range.name) return range.name;
 
   // Auto-generate name from bounds
@@ -81,9 +78,7 @@ function expandRanges(gen: RangesGenerator): PlaylistRule[] {
     const rangeName = buildRangeName(range, padWidth);
     const name = `${gen.basePath}/${rangeName}`;
 
-    const conditions: Condition[] = [
-      { inPlaylist: gen.sourcePlaylist } as Condition,
-    ];
+    const conditions: Condition[] = [{ inPlaylist: gen.sourcePlaylist } as Condition];
 
     if (range.gte !== undefined) {
       conditions.push({
@@ -148,13 +143,11 @@ function resolveTemplateRef(
     sourcePlaylist: { source: "existing" | "generated"; name: string };
     sort?: { field: string; order: "asc" | "desc" }[];
   },
-  templates: Record<string, GeneratorTemplate>
+  templates: Record<string, GeneratorTemplate>,
 ): InlineGenerator {
   const tmpl = templates[entry.template];
   if (!tmpl) {
-    throw new RuleValidationError(
-      `Generator references unknown template "${entry.template}"`
-    );
+    throw new RuleValidationError(`Generator references unknown template "${entry.template}"`);
   }
 
   const sort = entry.sort ?? tmpl.sort;
@@ -196,7 +189,7 @@ function resolveTemplateRef(
   }
 
   throw new RuleValidationError(
-    `Unknown template type "${(tmpl as Record<string, unknown>).type}"`
+    `Unknown template type "${(tmpl as Record<string, unknown>).type}"`,
   );
 }
 
@@ -213,7 +206,7 @@ function expandInline(gen: InlineGenerator): PlaylistRule[] {
 
 export function expandGenerators(
   generators: GeneratorEntry[],
-  templates?: Record<string, GeneratorTemplate>
+  templates?: Record<string, GeneratorTemplate>,
 ): PlaylistRule[] {
   const allRules: PlaylistRule[] = [];
   const tmplMap = templates ?? {};

@@ -39,18 +39,18 @@ Responsibilities are split as follows.
 
 ### iTunes / Music.app side
 
-* master track library
-* metadata editing
-* ratings
-* manual playlists
-* optional minimal first-stage smart playlists if desired
+- master track library
+- metadata editing
+- ratings
+- manual playlists
+- optional minimal first-stage smart playlists if desired
 
 ### this tool
 
-* evaluate smart-playlist-like conditions
-* resolve playlist dependencies
-* build nested folder playlists
-* output static playlists for DJ software
+- evaluate smart-playlist-like conditions
+- resolve playlist dependencies
+- build nested folder playlists
+- output static playlists for DJ software
 
 ---
 
@@ -92,24 +92,24 @@ Use these unless there is a compelling reason not to.
 
 ### runtime
 
-* `plist`
-* `commander`
-* `yaml`
-* `fs-extra`
-* `zod`
+- `plist`
+- `commander`
+- `yaml`
+- `fs-extra`
+- `zod`
 
 ### dev
 
-* `typescript`
-* `vitest`
-* `tsx`
-* `@types/node`
+- `typescript`
+- `vitest`
+- `tsx`
+- `@types/node`
 
 Reasoning:
 
-* `plist` because `iTunes Library.xml` is a plist XML, not generic arbitrary XML
-* `zod` for validating rules and internal normalization
-* `vitest` for fast unit tests
+- `plist` because `iTunes Library.xml` is a plist XML, not generic arbitrary XML
+- `zod` for validating rules and internal normalization
+- `vitest` for fast unit tests
 
 ---
 
@@ -117,14 +117,14 @@ Reasoning:
 
 Claude Code should produce:
 
-* TypeScript monorepo or workspace project
-* reusable core package
-* CLI package
-* tests
-* README
-* sample rules file
-* sample config comments
-* robust error messages
+- TypeScript monorepo or workspace project
+- reusable core package
+- CLI package
+- tests
+- README
+- sample rules file
+- sample config comments
+- robust error messages
 
 ---
 
@@ -215,86 +215,86 @@ Domain-specific error classes.
 
 ```ts
 export type Track = {
-  trackId: number
-  persistentId?: string
-  name?: string
-  artist?: string
-  albumArtist?: string
-  composer?: string
-  album?: string
-  genre?: string
-  bpm?: number
-  rating?: number
-  playCount?: number
-  skipCount?: number
-  year?: number
-  trackNumber?: number
-  discNumber?: number
-  dateAdded?: Date
-  dateModified?: Date
-  location?: string
-  comments?: string
-  grouping?: string
-  compilation?: boolean
-  podcast?: boolean
-  disabled?: boolean
-  kind?: string
-}
+  trackId: number;
+  persistentId?: string;
+  name?: string;
+  artist?: string;
+  albumArtist?: string;
+  composer?: string;
+  album?: string;
+  genre?: string;
+  bpm?: number;
+  rating?: number;
+  playCount?: number;
+  skipCount?: number;
+  year?: number;
+  trackNumber?: number;
+  discNumber?: number;
+  dateAdded?: Date;
+  dateModified?: Date;
+  location?: string;
+  comments?: string;
+  grouping?: string;
+  compilation?: boolean;
+  podcast?: boolean;
+  disabled?: boolean;
+  kind?: string;
+};
 ```
 
 ### 7.2 Playlist
 
 ```ts
 export type Playlist = {
-  playlistId: number
-  persistentId?: string
-  name: string
-  fullPath: string
-  parentId?: number
-  isFolder: boolean
-  isGenerated: boolean
-  source: "existing" | "generated"
-  trackIds: number[]
-}
+  playlistId: number;
+  persistentId?: string;
+  name: string;
+  fullPath: string;
+  parentId?: number;
+  isFolder: boolean;
+  isGenerated: boolean;
+  source: "existing" | "generated";
+  trackIds: number[];
+};
 ```
 
 ### 7.3 GeneratedPlaylist
 
 ```ts
 export type GeneratedPlaylist = {
-  playlistId?: number
-  name: string
-  path: string            // relative path without namespace prefix
-  fullPath: string        // namespace + path
-  parentPath?: string
-  trackIds: number[]
-  sort?: SortRule[]
-  ruleKey: string
-}
+  playlistId?: number;
+  name: string;
+  path: string; // relative path without namespace prefix
+  fullPath: string; // namespace + path
+  parentPath?: string;
+  trackIds: number[];
+  sort?: SortRule[];
+  ruleKey: string;
+};
 ```
 
 ### 7.4 FolderNode
 
 ```ts
 export type FolderNode = {
-  type: "folder"
-  name: string
-  fullPath: string
-  parentPath?: string
-  children: Array<FolderNode | PlaylistNode>
-}
+  type: "folder";
+  name: string;
+  fullPath: string;
+  parentPath?: string;
+  children: Array<FolderNode | PlaylistNode>;
+};
 ```
 
 ### 7.5 PlaylistNode
 
 ```ts
 export type PlaylistNode = {
-  type: "playlist"
-  name: string
-  fullPath: string
-  parentPath?: string
-  trackIds: number[]
-}
+  type: "playlist";
+  name: string;
+  fullPath: string;
+  parentPath?: string;
+  trackIds: number[];
+};
 ```
 
 ---
@@ -321,8 +321,8 @@ Use `plist.parse()` to parse the library XML into a JS object.
 
 Expected top-level keys include:
 
-* `Tracks`
-* `Playlists`
+- `Tracks`
+- `Playlists`
 
 ### 9.1 Tracks
 
@@ -334,11 +334,11 @@ Normalize playlists into internal `Playlist` records.
 
 Need to capture:
 
-* playlist id
-* name
-* folder flag
-* parent persistent/ID relation if available
-* playlist item track ids
+- playlist id
+- name
+- folder flag
+- parent persistent/ID relation if available
+- playlist item track ids
 
 ### 9.3 Existing playlist full path resolution
 
@@ -412,11 +412,11 @@ Optional higher-level generators that expand into concrete playlist rules before
 
 ```ts
 type BuildOptionsYaml = {
-  removeExistingNamespace?: boolean
-  failOnMissingPlaylist?: boolean
-  dedupeTrackIds?: boolean
-  caseSensitiveContains?: boolean
-}
+  removeExistingNamespace?: boolean;
+  failOnMissingPlaylist?: boolean;
+  dedupeTrackIds?: boolean;
+  caseSensitiveContains?: boolean;
+};
 ```
 
 Default values:
@@ -432,10 +432,10 @@ Default values:
 
 Meaning:
 
-* `removeExistingNamespace`: remove previously generated namespace subtree before appending fresh generated playlists
-* `failOnMissingPlaylist`: error when referenced playlist is not found
-* `dedupeTrackIds`: ensure playlist items are unique
-* `caseSensitiveContains`: default behavior of string `contains`
+- `removeExistingNamespace`: remove previously generated namespace subtree before appending fresh generated playlists
+- `failOnMissingPlaylist`: error when referenced playlist is not found
+- `dedupeTrackIds`: ensure playlist items are unique
+- `caseSensitiveContains`: default behavior of string `contains`
 
 ---
 
@@ -543,14 +543,14 @@ match:
 
 Supported operators:
 
-* `equals`
-* `contains`
-* `in`
-* `gt`
-* `gte`
-* `lt`
-* `lte`
-* `exists`
+- `equals`
+- `contains`
+- `in`
+- `gt`
+- `gte`
+- `lt`
+- `lte`
+- `exists`
 
 Examples:
 
@@ -586,13 +586,13 @@ Examples:
 
 Supported sources:
 
-* `existing`
-* `generated`
+- `existing`
+- `generated`
 
 Semantics:
 
-* `existing` references a playlist already present in input XML
-* `generated` references a concrete playlist produced earlier in evaluation order
+- `existing` references a playlist already present in input XML
+- `generated` references a concrete playlist produced earlier in evaluation order
 
 Forward references to generated playlists are forbidden.
 
@@ -622,29 +622,29 @@ match:
 
 Support these fields in v1:
 
-* `trackId`
-* `name`
-* `artist`
-* `albumArtist`
-* `composer`
-* `album`
-* `genre`
-* `bpm`
-* `rating`
-* `playCount`
-* `skipCount`
-* `year`
-* `trackNumber`
-* `discNumber`
-* `dateAdded`
-* `dateModified`
-* `location`
-* `comments`
-* `grouping`
-* `compilation`
-* `podcast`
-* `disabled`
-* `kind`
+- `trackId`
+- `name`
+- `artist`
+- `albumArtist`
+- `composer`
+- `album`
+- `genre`
+- `bpm`
+- `rating`
+- `playCount`
+- `skipCount`
+- `year`
+- `trackNumber`
+- `discNumber`
+- `dateAdded`
+- `dateModified`
+- `location`
+- `comments`
+- `grouping`
+- `compilation`
+- `podcast`
+- `disabled`
+- `kind`
 
 Unknown fields must throw validation error during rule parsing.
 
@@ -654,22 +654,22 @@ Unknown fields must throw validation error during rule parsing.
 
 Normalize parsed values:
 
-* numeric plist fields → numbers
-* date plist fields → `Date`
-* boolean plist flags → booleans
-* missing fields → `undefined`
+- numeric plist fields → numbers
+- date plist fields → `Date`
+- boolean plist flags → booleans
+- missing fields → `undefined`
 
 Comparison rules:
 
-* numeric comparisons on missing values return false
-* string comparisons on missing values return false
-* `exists: true` means field is not `undefined` and not null
-* `exists: false` means field is `undefined` or null
+- numeric comparisons on missing values return false
+- string comparisons on missing values return false
+- `exists: true` means field is not `undefined` and not null
+- `exists: false` means field is `undefined` or null
 
 For `contains`:
 
-* default case-insensitive unless explicitly overridden in future
-* normalize both sides to strings
+- default case-insensitive unless explicitly overridden in future
+- normalize both sides to strings
 
 ---
 
@@ -695,22 +695,22 @@ Schema:
 
 ```ts
 type SortRule = {
-  field: SupportedField
-  order: "asc" | "desc"
-}
+  field: SupportedField;
+  order: "asc" | "desc";
+};
 ```
 
 Sorting behavior:
 
-* stable sort
-* undefined values sort last
-* compare strings case-insensitively
-* compare dates by timestamp
-* compare numbers numerically
+- stable sort
+- undefined values sort last
+- compare strings case-insensitively
+- compare dates by timestamp
+- compare numbers numerically
 
 If no sort specified:
 
-* preserve original track iteration order from input track registry order or natural playlist filter order
+- preserve original track iteration order from input track registry order or natural playlist filter order
 
 ---
 
@@ -746,16 +746,15 @@ generators:
 
 Expansion behavior:
 
-* create playlists for each half-open bucket
-* example with `from=80`, `to=90`, `step=5`:
-
-  * `BPM/080-084`
-  * `BPM/085-089`
+- create playlists for each half-open bucket
+- example with `from=80`, `to=90`, `step=5`:
+  - `BPM/080-084`
+  - `BPM/085-089`
 
 Semantics:
 
-* lower bound inclusive
-* upper bound exclusive for each bucket
+- lower bound inclusive
+- upper bound exclusive for each bucket
 
 Generated rule example:
 
@@ -778,10 +777,10 @@ Implement generator expansion in a modular way so additional generator types can
 
 Possible future generators:
 
-* rating buckets
-* year ranges
-* genre splits from a configured list
-* date rolling windows
+- rating buckets
+- year ranges
+- genre splits from a configured list
+- date rolling windows
 
 ---
 
@@ -797,8 +796,8 @@ Evaluation order:
 
 Generated playlists can only reference:
 
-* existing playlists
-* previously evaluated generated playlists
+- existing playlists
+- previously evaluated generated playlists
 
 Forward reference is an error.
 
@@ -808,17 +807,17 @@ Forward reference is an error.
 
 At minimum:
 
-* detect direct forward references
-* detect duplicate generated playlist full paths
+- detect direct forward references
+- detect duplicate generated playlist full paths
 
 Optional but recommended:
 
-* build a dependency graph for generated references and validate no cycles, even though strict top-to-bottom model should already block most cases
+- build a dependency graph for generated references and validate no cycles, even though strict top-to-bottom model should already block most cases
 
 Error examples:
 
-* generated playlist references a later generated playlist
-* duplicate path `Base/Favorites/4stars+`
+- generated playlist references a later generated playlist
+- duplicate path `Base/Favorites/4stars+`
 
 ---
 
@@ -866,12 +865,11 @@ If no nested path available in existing library, fall back to exact `name`.
 
 Rules:
 
-* if exact one match found, use it
-* if multiple matches found by name only, throw ambiguity error and instruct user to disambiguate with full path once supported by source data
-* if none found:
-
-  * throw error if `failOnMissingPlaylist = true`
-  * otherwise treat as empty playlist
+- if exact one match found, use it
+- if multiple matches found by name only, throw ambiguity error and instruct user to disambiguate with full path once supported by source data
+- if none found:
+  - throw error if `failOnMissingPlaylist = true`
+  - otherwise treat as empty playlist
 
 ---
 
@@ -901,13 +899,13 @@ internally.
 
 If `dedupeTrackIds = true`:
 
-* each generated playlist must contain unique track IDs
-* preserve first occurrence order before sorting
-* then apply sorting if configured
+- each generated playlist must contain unique track IDs
+- preserve first occurrence order before sorting
+- then apply sorting if configured
 
 If false:
 
-* duplicates may remain, though in practice duplicates should still not appear under normal filtering
+- duplicates may remain, though in practice duplicates should still not appear under normal filtering
 
 ---
 
@@ -925,9 +923,9 @@ itunes-playlist-builder preview \
 
 Output should include:
 
-* folder tree
-* playlist counts
-* summary totals
+- folder tree
+- playlist counts
+- summary totals
 
 Example:
 
@@ -949,8 +947,8 @@ Summary:
 
 Optional flags:
 
-* `--json` for machine-readable preview
-* `--verbose` to print resolved rule summary
+- `--json` for machine-readable preview
+- `--verbose` to print resolved rule summary
 
 ---
 
@@ -967,17 +965,17 @@ itunes-playlist-builder build \
 
 Behavior:
 
-* read input XML
-* evaluate all rules
-* clone plist object
-* remove prior generated namespace subtree if configured
-* append generated folders and playlists
-* write output plist XML
+- read input XML
+- evaluate all rules
+- clone plist object
+- remove prior generated namespace subtree if configured
+- append generated folders and playlists
+- write output plist XML
 
 Optional flags:
 
-* `--pretty` if plist builder formatting allows
-* `--dry-run` to evaluate and preview without writing
+- `--pretty` if plist builder formatting allows
+- `--dry-run` to evaluate and preview without writing
 
 ---
 
@@ -991,17 +989,17 @@ Never overwrite input file by default.
 
 If `removeExistingNamespace` is true:
 
-* locate namespace folder playlist
-* remove it and all descendants from playlist array
-* then append fresh generated namespace subtree
+- locate namespace folder playlist
+- remove it and all descendants from playlist array
+- then append fresh generated namespace subtree
 
 ### 27.3 Preserve everything else
 
 Must preserve:
 
-* all existing tracks
-* all non-generated playlists
-* unrelated metadata at plist root
+- all existing tracks
+- all non-generated playlists
+- unrelated metadata at plist root
 
 ---
 
@@ -1011,15 +1009,15 @@ Since actual sample XML will be provided later, implement serialization in a way
 
 General requirements:
 
-* represent folders as folder playlist entries
-* represent child relationships via parent linkage fields if present/required
-* represent playlist items using track references by track ID
-* assign fresh playlist IDs for all generated folders and playlists
+- represent folders as folder playlist entries
+- represent child relationships via parent linkage fields if present/required
+- represent playlist items using track references by track ID
+- assign fresh playlist IDs for all generated folders and playlists
 
 Important:
 
-* keep writer modular so field names used for folder/playlists can be adjusted when sample XML is available
-* do not hardcode more than necessary before sample inspection
+- keep writer modular so field names used for folder/playlists can be adjusted when sample XML is available
+- do not hardcode more than necessary before sample inspection
 
 This means `xmlWriter.ts` should isolate all format-specific mapping logic.
 
@@ -1030,9 +1028,9 @@ This means `xmlWriter.ts` should isolate all format-specific mapping logic.
 Determine current maximum playlist ID from existing library.
 Assign new IDs sequentially for:
 
-* namespace root folder
-* generated folders
-* generated playlists
+- namespace root folder
+- generated folders
+- generated playlists
 
 Never reuse removed generated IDs in the same run unless convenient; sequential fresh allocation is fine.
 
@@ -1052,33 +1050,33 @@ Expose at least:
 
 ```ts
 export type BuildParams = {
-  inputXmlPath: string
-  rulesPath: string
-  outputXmlPath: string
-}
+  inputXmlPath: string;
+  rulesPath: string;
+  outputXmlPath: string;
+};
 
-export async function buildLibrary(params: BuildParams): Promise<BuildResult>
+export async function buildLibrary(params: BuildParams): Promise<BuildResult>;
 
 export async function previewLibrary(params: {
-  inputXmlPath: string
-  rulesPath: string
-}): Promise<PreviewResult>
+  inputXmlPath: string;
+  rulesPath: string;
+}): Promise<PreviewResult>;
 ```
 
 Suggested result objects:
 
 ```ts
 type BuildResult = {
-  generatedPlaylistCount: number
-  generatedFolderCount: number
-  outputXmlPath: string
-}
+  generatedPlaylistCount: number;
+  generatedFolderCount: number;
+  outputXmlPath: string;
+};
 
 type PreviewResult = {
-  tree: FolderNode
-  playlistCount: number
-  folderCount: number
-}
+  tree: FolderNode;
+  playlistCount: number;
+  folderCount: number;
+};
 ```
 
 This API is intended to be reused by a future GUI.
@@ -1091,13 +1089,13 @@ Create explicit domain errors.
 
 Recommended error classes:
 
-* `RuleValidationError`
-* `LibraryParseError`
-* `PlaylistResolutionError`
-* `ForwardReferenceError`
-* `DuplicatePlaylistPathError`
-* `AmbiguousPlaylistReferenceError`
-* `XmlWriteError`
+- `RuleValidationError`
+- `LibraryParseError`
+- `PlaylistResolutionError`
+- `ForwardReferenceError`
+- `DuplicatePlaylistPathError`
+- `AmbiguousPlaylistReferenceError`
+- `XmlWriteError`
 
 Examples:
 
@@ -1125,19 +1123,19 @@ Error messages must be human-readable because the user will edit YAML directly.
 
 Target library size:
 
-* 10,000 tracks
-* 100 concrete rules after generator expansion
+- 10,000 tracks
+- 100 concrete rules after generator expansion
 
 Target runtime:
 
-* under 1 second on a normal modern machine, excluding file I/O variability
+- under 1 second on a normal modern machine, excluding file I/O variability
 
 Guidelines:
 
-* avoid repeated full scans where unnecessary
-* playlist membership lookups should use `Set<number>`
-* generated playlist registry should be map-based
-* sorting only after filter results are collected
+- avoid repeated full scans where unnecessary
+- playlist membership lookups should use `Set<number>`
+- generated playlist registry should be map-based
+- sorting only after filter results are collected
 
 ---
 
@@ -1147,30 +1145,30 @@ Use `vitest`.
 
 ### 34.1 Unit tests
 
-* track normalization
-* playlist normalization
-* field conditions
-* logical conditions
-* playlist membership conditions
-* sort behavior
-* generator expansion
-* folder tree building
+- track normalization
+- playlist normalization
+- field conditions
+- logical conditions
+- playlist membership conditions
+- sort behavior
+- generator expansion
+- folder tree building
 
 ### 34.2 Integration tests
 
-* sample plist parse → build → plist output
-* namespace replacement
-* generated folder hierarchy
-* preview output generation
+- sample plist parse → build → plist output
+- namespace replacement
+- generated folder hierarchy
+- preview output generation
 
 ### 34.3 Edge cases
 
-* missing fields
-* missing playlist references
-* duplicate playlist paths
-* ambiguous existing playlist names
-* empty result playlists
-* nested not/all/any combinations
+- missing fields
+- missing playlist references
+- duplicate playlist paths
+- ambiguous existing playlist names
+- empty result playlists
+- nested not/all/any combinations
 
 ---
 
@@ -1178,10 +1176,10 @@ Use `vitest`.
 
 Create minimal fixtures:
 
-* `fixtures/library.minimal.xml`
-* `fixtures/library.with-folders.xml`
-* `fixtures/rules.basic.yml`
-* `fixtures/rules.generators.yml`
+- `fixtures/library.minimal.xml`
+- `fixtures/library.with-folders.xml`
+- `fixtures/rules.basic.yml`
+- `fixtures/rules.generators.yml`
 
 Once the real sample XML is provided, add fixture(s) derived from it in anonymized/minimal form if possible.
 
@@ -1215,15 +1213,15 @@ This order minimizes thrash and keeps format-specific writer work isolated until
 
 README should include:
 
-* purpose
-* install
-* build command
-* preview command
-* rules file example
-* BPM generator example
-* supported fields
-* known limitations
-* note that actual XML compatibility may be tuned after sample file inspection
+- purpose
+- install
+- build command
+- preview command
+- rules file example
+- BPM generator example
+- supported fields
+- known limitations
+- note that actual XML compatibility may be tuned after sample file inspection
 
 ---
 
@@ -1231,14 +1229,14 @@ README should include:
 
 Do not implement:
 
-* direct Apple Music/iTunes DB access
-* full compatibility with native iTunes smart playlist semantics
-* GUI
-* filesystem watch mode
-* live sync
-* arbitrary user-defined JavaScript conditions
-* playlist rule inheritance syntax
-* regex matching
+- direct Apple Music/iTunes DB access
+- full compatibility with native iTunes smart playlist semantics
+- GUI
+- filesystem watch mode
+- live sync
+- arbitrary user-defined JavaScript conditions
+- playlist rule inheritance syntax
+- regex matching
 
 ---
 
@@ -1246,15 +1244,15 @@ Do not implement:
 
 Design now so these can be added later without major refactor:
 
-* date conditions like `afterDaysAgo`
-* regex string matching
-* reusable named condition blocks
-* rule inheritance
-* additional generators
-* GUI rule editor
-* diff preview between previous and current generation
-* watch mode
-* export of diagnostic evaluation report
+- date conditions like `afterDaysAgo`
+- regex string matching
+- reusable named condition blocks
+- rule inheritance
+- additional generators
+- GUI rule editor
+- diff preview between previous and current generation
+- watch mode
+- export of diagnostic evaluation report
 
 ---
 
@@ -1344,15 +1342,15 @@ To keep v1 small, **do not implement `notEquals`**. Rewrite using `not + equals`
 Corrected example:
 
 ```yaml
-  - name: "Manual/HighPriority"
-    match:
-      all:
-        - inPlaylist:
-            source: existing
-            name: "DJ/HighPriority"
-        - not:
-            field: disabled
-            equals: true
+- name: "Manual/HighPriority"
+  match:
+    all:
+      - inPlaylist:
+          source: existing
+          name: "DJ/HighPriority"
+      - not:
+          field: disabled
+          equals: true
 ```
 
 Generators example:
@@ -1400,9 +1398,9 @@ A real sample `iTunes Library.xml` will be provided separately.
 
 When implementing:
 
-* keep plist parse/write logic flexible
-* isolate all raw plist field mapping in parser/writer modules
-* after sample arrives, adjust folder serialization details if necessary without changing rule/evaluation architecture
+- keep plist parse/write logic flexible
+- isolate all raw plist field mapping in parser/writer modules
+- after sample arrives, adjust folder serialization details if necessary without changing rule/evaluation architecture
 
 This is critical.
 

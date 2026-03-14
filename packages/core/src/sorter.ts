@@ -29,7 +29,7 @@ function compareValues(a: unknown, b: unknown): number {
 export function sortTrackIds(
   trackIds: number[],
   tracks: Map<number, Track>,
-  sortRules: SortRule[]
+  sortRules: SortRule[],
 ): number[] {
   if (sortRules.length === 0) return trackIds;
 

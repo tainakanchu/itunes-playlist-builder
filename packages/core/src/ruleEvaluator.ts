@@ -3,17 +3,14 @@ import type { PlaylistRule, Condition } from "./ruleSchema.js";
 import { evaluateCondition } from "./conditionEvaluator.js";
 import { PlaylistRegistry } from "./playlistRegistry.js";
 import { sortTrackIds } from "./sorter.js";
-import {
-  ForwardReferenceError,
-  DuplicatePlaylistPathError,
-} from "./errors.js";
+import { ForwardReferenceError, DuplicatePlaylistPathError } from "./errors.js";
 
 export function evaluateRules(
   rules: PlaylistRule[],
   namespace: string,
   tracks: Map<number, Track>,
   registry: PlaylistRegistry,
-  options: BuildOptions
+  options: BuildOptions,
 ): GeneratedPlaylist[] {
   const generated: GeneratedPlaylist[] = [];
   const seenPaths = new Set<string>();
@@ -24,9 +21,7 @@ export function evaluateRules(
 
     // Check duplicate paths
     if (seenPaths.has(path)) {
-      throw new DuplicatePlaylistPathError(
-        `Duplicate generated playlist path: "${path}"`
-      );
+      throw new DuplicatePlaylistPathError(`Duplicate generated playlist path: "${path}"`);
     }
     seenPaths.add(path);
 
@@ -37,11 +32,8 @@ export function evaluateRules(
     let matchedTrackIds: number[] = [];
 
     for (const [trackId, track] of tracks) {
-      const matches = evaluateCondition(
-        track,
-        rule.match as Condition,
-        options,
-        (ref) => registry.resolve(ref)
+      const matches = evaluateCondition(track, rule.match as Condition, options, (ref) =>
+        registry.resolve(ref),
       );
       if (matches) {
         matchedTrackIds.push(trackId);
@@ -67,9 +59,7 @@ export function evaluateRules(
       name: path.split("/").pop()!,
       path,
       fullPath,
-      parentPath: path.includes("/")
-        ? path.split("/").slice(0, -1).join("/")
-        : undefined,
+      parentPath: path.includes("/") ? path.split("/").slice(0, -1).join("/") : undefined,
       trackIds: matchedTrackIds,
       sort: sortRules.length > 0 ? sortRules : undefined,
       ruleKey: path,
@@ -85,7 +75,7 @@ export function evaluateRules(
 function validateNoForwardReferences(
   condition: Condition,
   currentPath: string,
-  registry: PlaylistRegistry
+  registry: PlaylistRegistry,
 ): void {
   const cond = condition as Record<string, unknown>;
 
@@ -112,7 +102,7 @@ function validateNoForwardReferences(
     const ref = cond["inPlaylist"] as { source: string; name: string };
     if (ref.source === "generated" && !registry.hasGenerated(ref.name)) {
       throw new ForwardReferenceError(
-        `Generated playlist "${currentPath}" references later playlist "${ref.name}"`
+        `Generated playlist "${currentPath}" references later playlist "${ref.name}"`,
       );
     }
   }

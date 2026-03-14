@@ -36,7 +36,7 @@ export function mergeGeneratedPlaylists(
   namespace: string,
   tree: FolderNode,
   generatedPlaylists: GeneratedPlaylist[],
-  removeExisting: boolean
+  removeExisting: boolean,
 ): Record<string, unknown> {
   const result = { ...rawPlist };
   let playlists = [...(result["Playlists"] as Array<Record<string, unknown>>)];
@@ -52,10 +52,7 @@ export function mergeGeneratedPlaylists(
   // Assign IDs and persistent IDs
   const entries: PlistPlaylistEntry[] = [];
 
-  function walkTree(
-    node: FolderNode | PlaylistNode,
-    parentPersistentId?: string
-  ): void {
+  function walkTree(node: FolderNode | PlaylistNode, parentPersistentId?: string): void {
     const playlistId = nextId++;
     const persistentId = generatePersistentId();
     persistentIdMap.set(node.fullPath, persistentId);
@@ -105,11 +102,11 @@ export function mergeGeneratedPlaylists(
 
 function removeNamespaceSubtree(
   playlists: Array<Record<string, unknown>>,
-  namespace: string
+  namespace: string,
 ): Array<Record<string, unknown>> {
   // Find the namespace root folder
   const namespaceFolderIndex = playlists.findIndex(
-    (pl) => pl["Name"] === namespace && pl["Folder"] === true && !pl["Parent Persistent ID"]
+    (pl) => pl["Name"] === namespace && pl["Folder"] === true && !pl["Parent Persistent ID"],
   );
 
   if (namespaceFolderIndex === -1) return playlists;
@@ -133,9 +130,7 @@ function removeNamespaceSubtree(
     }
   }
 
-  return playlists.filter(
-    (pl) => !subtreeIds.has(pl["Playlist Persistent ID"] as string)
-  );
+  return playlists.filter((pl) => !subtreeIds.has(pl["Playlist Persistent ID"] as string));
 }
 
 export function buildPlistXml(plistObj: Record<string, unknown>): string {
@@ -143,21 +138,18 @@ export function buildPlistXml(plistObj: Record<string, unknown>): string {
     return plist.build(plistObj as plist.PlistValue);
   } catch (e) {
     throw new XmlWriteError(
-      `Failed to build plist XML: ${e instanceof Error ? e.message : String(e)}`
+      `Failed to build plist XML: ${e instanceof Error ? e.message : String(e)}`,
     );
   }
 }
 
-export function writePlistFile(
-  filePath: string,
-  plistObj: Record<string, unknown>
-): void {
+export function writePlistFile(filePath: string, plistObj: Record<string, unknown>): void {
   const xml = buildPlistXml(plistObj);
   try {
     writeFileSync(filePath, xml, "utf-8");
   } catch (e) {
     throw new XmlWriteError(
-      `Failed to write file "${filePath}": ${e instanceof Error ? e.message : String(e)}`
+      `Failed to write file "${filePath}": ${e instanceof Error ? e.message : String(e)}`,
     );
   }
 }

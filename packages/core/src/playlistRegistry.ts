@@ -1,9 +1,6 @@
 import type { Playlist, GeneratedPlaylist, BuildOptions } from "./models.js";
 import type { PlaylistRef } from "./ruleSchema.js";
-import {
-  PlaylistResolutionError,
-  AmbiguousPlaylistReferenceError,
-} from "./errors.js";
+import { PlaylistResolutionError, AmbiguousPlaylistReferenceError } from "./errors.js";
 
 export class PlaylistRegistry {
   private existingByFullPath = new Map<string, Playlist>();
@@ -13,7 +10,7 @@ export class PlaylistRegistry {
 
   constructor(
     existingPlaylists: Playlist[],
-    private options: BuildOptions
+    private options: BuildOptions,
   ) {
     for (const pl of existingPlaylists) {
       this.existingByFullPath.set(pl.fullPath, pl);
@@ -34,16 +31,14 @@ export class PlaylistRegistry {
     const byName = this.existingByName.get(name);
     if (!byName || byName.length === 0) {
       if (this.options.failOnMissingPlaylist) {
-        throw new PlaylistResolutionError(
-          `Referenced existing playlist not found: "${name}"`
-        );
+        throw new PlaylistResolutionError(`Referenced existing playlist not found: "${name}"`);
       }
       return new Set();
     }
 
     if (byName.length > 1) {
       throw new AmbiguousPlaylistReferenceError(
-        `Multiple existing playlists matched name "${name}"; use nested path when available`
+        `Multiple existing playlists matched name "${name}"; use nested path when available`,
       );
     }
 
@@ -63,10 +58,7 @@ export class PlaylistRegistry {
 
   registerGenerated(playlist: GeneratedPlaylist): void {
     this.generatedByPath.set(playlist.path, playlist);
-    this.generatedTrackSets.set(
-      playlist.path,
-      new Set(playlist.trackIds)
-    );
+    this.generatedTrackSets.set(playlist.path, new Set(playlist.trackIds));
   }
 
   hasGenerated(path: string): boolean {
