@@ -3,6 +3,7 @@ import type {
   BpmRangeGenerator,
   RangesGenerator,
   RangeEntry,
+  TagsGenerator,
   Condition,
   GeneratorEntry,
   GeneratorTemplate,
@@ -119,6 +120,27 @@ function expandRanges(gen: RangesGenerator): PlaylistRule[] {
   return rules;
 }
 
+function expandTags(gen: TagsGenerator): PlaylistRule[] {
+  const rules: PlaylistRule[] = [];
+
+  for (const value of gen.values) {
+    const name = `${gen.basePath}/${value}`;
+
+    const conditions: Condition[] = [
+      { inPlaylist: gen.sourcePlaylist } as Condition,
+      { field: gen.field as string, contains: value } as Condition,
+    ];
+
+    rules.push({
+      name,
+      match: { all: conditions },
+      sort: gen.sort,
+    } as PlaylistRule);
+  }
+
+  return rules;
+}
+
 function resolveTemplateRef(
   entry: {
     template: string;
@@ -162,6 +184,17 @@ function resolveTemplateRef(
     } as RangesGenerator;
   }
 
+  if (tmpl.type === "tags") {
+    return {
+      type: "tags",
+      basePath: entry.basePath,
+      sourcePlaylist: entry.sourcePlaylist,
+      field: tmpl.field,
+      values: tmpl.values,
+      sort,
+    } as TagsGenerator;
+  }
+
   throw new RuleValidationError(
     `Unknown template type "${(tmpl as Record<string, unknown>).type}"`
   );
@@ -173,6 +206,8 @@ function expandInline(gen: InlineGenerator): PlaylistRule[] {
       return expandBpmRange(gen as BpmRangeGenerator);
     case "ranges":
       return expandRanges(gen as RangesGenerator);
+    case "tags":
+      return expandTags(gen as TagsGenerator);
   }
 }
 

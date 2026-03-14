@@ -3,6 +3,7 @@ import { expandGenerators } from "../src/generatorExpander.js";
 import type {
   BpmRangeGenerator,
   RangesGenerator,
+  TagsGenerator,
   GeneratorTemplate,
   TemplateRefGenerator,
 } from "../src/ruleSchema.js";
@@ -362,6 +363,106 @@ describe("generatorExpander", () => {
 
       const rules = expandGenerators([gen]);
       expect(rules[0].sort).toEqual([{ field: "bpm", order: "asc" }]);
+    });
+  });
+
+  describe("tags generator", () => {
+    it("expands tag values into playlists", () => {
+      const gen: TagsGenerator = {
+        type: "tags",
+        basePath: "Style",
+        sourcePlaylist: { source: "generated", name: "Base/All" },
+        field: "genre",
+        values: ["House", "Techno", "DnB"],
+      };
+
+      const rules = expandGenerators([gen]);
+      expect(rules).toHaveLength(3);
+      expect(rules[0].name).toBe("Style/House");
+      expect(rules[1].name).toBe("Style/Techno");
+      expect(rules[2].name).toBe("Style/DnB");
+    });
+
+    it("uses contains condition for matching", () => {
+      const gen: TagsGenerator = {
+        type: "tags",
+        basePath: "Style",
+        sourcePlaylist: { source: "generated", name: "Base/All" },
+        field: "genre",
+        values: ["House"],
+      };
+
+      const rules = expandGenerators([gen]);
+      // The match should have all: [inPlaylist, {field: genre, contains: "House"}]
+      const match = rules[0].match as { all: Record<string, unknown>[] };
+      expect(match.all).toHaveLength(2);
+      expect(match.all[1]).toEqual({ field: "genre", contains: "House" });
+    });
+
+    it("propagates sort rules", () => {
+      const gen: TagsGenerator = {
+        type: "tags",
+        basePath: "Region",
+        sourcePlaylist: { source: "generated", name: "Base/All" },
+        field: "genre",
+        values: ["J-POP"],
+        sort: [{ field: "artist", order: "asc" }],
+      };
+
+      const rules = expandGenerators([gen]);
+      expect(rules[0].sort).toEqual([{ field: "artist", order: "asc" }]);
+    });
+
+    it("works as template reference", () => {
+      const templates: Record<string, GeneratorTemplate> = {
+        styles: {
+          type: "tags",
+          field: "genre",
+          values: ["House", "Techno", "Trance"],
+        },
+      };
+
+      const ref: TemplateRefGenerator = {
+        template: "styles",
+        basePath: "Genre/Styles",
+        sourcePlaylist: { source: "generated", name: "Base/All" },
+      };
+
+      const rules = expandGenerators([ref], templates);
+      expect(rules).toHaveLength(3);
+      expect(rules[0].name).toBe("Genre/Styles/House");
+      expect(rules[1].name).toBe("Genre/Styles/Techno");
+      expect(rules[2].name).toBe("Genre/Styles/Trance");
+    });
+
+    it("reuses template for multiple source playlists", () => {
+      const templates: Record<string, GeneratorTemplate> = {
+        styles: {
+          type: "tags",
+          field: "genre",
+          values: ["House", "DnB"],
+        },
+      };
+
+      const refs: TemplateRefGenerator[] = [
+        {
+          template: "styles",
+          basePath: "Region/J-POP/Style",
+          sourcePlaylist: { source: "generated", name: "Region/J-POP" },
+        },
+        {
+          template: "styles",
+          basePath: "Region/Taiwan/Style",
+          sourcePlaylist: { source: "generated", name: "Region/Taiwan" },
+        },
+      ];
+
+      const rules = expandGenerators(refs, templates);
+      expect(rules).toHaveLength(4);
+      expect(rules[0].name).toBe("Region/J-POP/Style/House");
+      expect(rules[1].name).toBe("Region/J-POP/Style/DnB");
+      expect(rules[2].name).toBe("Region/Taiwan/Style/House");
+      expect(rules[3].name).toBe("Region/Taiwan/Style/DnB");
     });
   });
 });

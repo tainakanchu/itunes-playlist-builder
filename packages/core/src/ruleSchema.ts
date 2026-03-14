@@ -93,9 +93,18 @@ const rangesTemplateSchema = z.object({
   sort: z.array(sortRuleSchema).optional(),
 });
 
+// Tags template: split by field contains, one playlist per tag value
+const tagsTemplateSchema = z.object({
+  type: z.literal("tags"),
+  field: supportedFieldEnum,
+  values: z.array(z.string()),
+  sort: z.array(sortRuleSchema).optional(),
+});
+
 const generatorTemplateSchema = z.discriminatedUnion("type", [
   bpmRangeTemplateSchema,
   rangesTemplateSchema,
+  tagsTemplateSchema,
 ]);
 
 // --- Generators (inline or template-ref) ---
@@ -131,9 +140,20 @@ const templateRefGeneratorSchema = z.object({
   sort: z.array(sortRuleSchema).optional(),
 });
 
+// Inline tags
+const tagsGeneratorSchema = z.object({
+  type: z.literal("tags"),
+  basePath: z.string(),
+  sourcePlaylist: playlistRefSchema,
+  field: supportedFieldEnum,
+  values: z.array(z.string()),
+  sort: z.array(sortRuleSchema).optional(),
+});
+
 const inlineGeneratorSchema = z.discriminatedUnion("type", [
   bpmRangeGeneratorSchema,
   rangesGeneratorSchema,
+  tagsGeneratorSchema,
 ]);
 
 // A generator entry is either inline or a template reference
@@ -167,6 +187,7 @@ export type Generator = z.infer<typeof inlineGeneratorSchema>;
 export type BpmRangeGenerator = z.infer<typeof bpmRangeGeneratorSchema>;
 export type RangesGenerator = z.infer<typeof rangesGeneratorSchema>;
 export type RangeEntry = z.infer<typeof rangeEntrySchema>;
+export type TagsGenerator = z.infer<typeof tagsGeneratorSchema>;
 export type GeneratorTemplate = z.infer<typeof generatorTemplateSchema>;
 export type PlaylistRef = z.infer<typeof playlistRefSchema>;
 export type SortRuleInput = z.infer<typeof sortRuleSchema>;

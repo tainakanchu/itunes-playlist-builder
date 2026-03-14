@@ -22,6 +22,28 @@ templates:
       - field: name
         order: asc
 
+  # Genre style tags (case-insensitive contains matching)
+  musicStyles:
+    type: tags
+    field: genre
+    values: ["House", "Techno", "Trance", "DnB", "Hardcore", "FutureBass", "R&B"]
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+
+  # Region tags
+  regions:
+    type: tags
+    field: genre
+    values: ["J-POP", "Anime", "Taiwan", "China", "K-POP", "Vocaloid", "Toho"]
+    sort:
+      - field: artist
+        order: asc
+      - field: name
+        order: asc
+
   # DJ-oriented overlapping BPM zones
   djZones:
     type: ranges
@@ -175,6 +197,20 @@ generators:
   # Overlapping DJ zones for favorites
   - template: djZones
     basePath: "DJ/Zones"
+    sourcePlaylist:
+      source: generated
+      name: "Base/Favorites/4stars+"
+
+  # Style breakdown for favorites
+  - template: musicStyles
+    basePath: "Style"
+    sourcePlaylist:
+      source: generated
+      name: "Base/Favorites/4stars+"
+
+  # Region breakdown for favorites
+  - template: regions
+    basePath: "Region"
     sourcePlaylist:
       source: generated
       name: "Base/Favorites/4stars+"

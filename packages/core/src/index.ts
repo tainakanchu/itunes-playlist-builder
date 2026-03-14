@@ -43,6 +43,7 @@ export type {
   BpmRangeGenerator,
   RangesGenerator,
   RangeEntry,
+  TagsGenerator,
   PlaylistRef,
   SortRuleInput,
 } from "./ruleSchema.js";
