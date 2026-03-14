@@ -1,0 +1,21 @@
+{
+  "name": "@itunes-playlist-builder/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "itunes-playlist-builder": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@itunes-playlist-builder/core": "workspace:*",
+    "commander": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

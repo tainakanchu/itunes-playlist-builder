@@ -1,0 +1,14 @@
+[tools]
+node = "22"
+
+[tasks.dev]
+run = "pnpm -r build"
+description = "Build all packages"
+
+[tasks.test]
+run = "pnpm -r test"
+description = "Run all tests"
+
+[tasks.lint]
+run = "pnpm -r lint"
+description = "Lint all packages"

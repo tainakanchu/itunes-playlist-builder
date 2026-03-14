@@ -1,0 +1,29 @@
+{
+  "name": "@itunes-playlist-builder/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "plist": "^3.1.0",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/plist": "^3.0.5",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

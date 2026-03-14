@@ -1,0 +1,32 @@
+namespace: "_Generated"
+
+options:
+  removeExistingNamespace: true
+  failOnMissingPlaylist: true
+  dedupeTrackIds: true
+
+playlists:
+  - name: "Base/All4stars+"
+    match:
+      all:
+        - field: rating
+          gte: 80
+        - not:
+            field: podcast
+            equals: true
+
+generators:
+  - type: bpmRange
+    basePath: "BPM"
+    sourcePlaylist:
+      source: generated
+      name: "Base/All4stars+"
+    from: 120
+    to: 140
+    step: 5
+    pad: 3
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc

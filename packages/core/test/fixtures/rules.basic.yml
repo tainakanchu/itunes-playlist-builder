@@ -1,0 +1,57 @@
+namespace: "_Generated"
+
+options:
+  removeExistingNamespace: true
+  failOnMissingPlaylist: true
+  dedupeTrackIds: true
+  caseSensitiveContains: false
+
+playlists:
+  - name: "Base/Favorites/4stars+"
+    match:
+      all:
+        - field: rating
+          gte: 80
+        - not:
+            field: podcast
+            equals: true
+    sort:
+      - field: artist
+        order: asc
+      - field: name
+        order: asc
+
+  - name: "Genre/House/All"
+    match:
+      all:
+        - inPlaylist:
+            source: generated
+            name: "Base/Favorites/4stars+"
+        - field: genre
+          contains: "House"
+    sort:
+      - field: bpm
+        order: asc
+
+  - name: "Existing/FromFavorites"
+    match:
+      inPlaylist:
+        source: existing
+        name: "My Favorites"
+    sort:
+      - field: name
+        order: asc
+
+  - name: "SetOps/HouseMinusExclude"
+    match:
+      all:
+        - inPlaylist:
+            source: existing
+            name: "DJ/House Set"
+        - not:
+            inPlaylist:
+              source: existing
+              name: "DJ/Exclude"
+    sort:
+      - field: name
+        order: asc

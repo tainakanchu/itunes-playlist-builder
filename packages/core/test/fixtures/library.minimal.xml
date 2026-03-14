@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Major Version</key><integer>1</integer>
+	<key>Minor Version</key><integer>1</integer>
+	<key>Application Version</key><string>12.0</string>
+	<key>Library Persistent ID</key><string>AABBCCDD11223344</string>
+	<key>Tracks</key>
+	<dict>
+		<key>100</key>
+		<dict>
+			<key>Track ID</key><integer>100</integer>
+			<key>Name</key><string>Track A</string>
+			<key>Artist</key><string>Artist 1</string>
+			<key>Album</key><string>Album X</string>
+			<key>Genre</key><string>House</string>
+			<key>BPM</key><integer>128</integer>
+			<key>Rating</key><integer>100</integer>
+			<key>Play Count</key><integer>50</integer>
+			<key>Year</key><integer>2020</integer>
+			<key>Track Number</key><integer>1</integer>
+			<key>Date Added</key><date>2023-01-15T10:00:00Z</date>
+			<key>Persistent ID</key><string>AA00000000000001</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Location</key><string>file://localhost/music/track_a.mp3</string>
+		</dict>
+		<key>101</key>
+		<dict>
+			<key>Track ID</key><integer>101</integer>
+			<key>Name</key><string>Track B</string>
+			<key>Artist</key><string>Artist 2</string>
+			<key>Album</key><string>Album Y</string>
+			<key>Genre</key><string>Techno</string>
+			<key>BPM</key><integer>135</integer>
+			<key>Rating</key><integer>80</integer>
+			<key>Play Count</key><integer>30</integer>
+			<key>Year</key><integer>2021</integer>
+			<key>Track Number</key><integer>2</integer>
+			<key>Date Added</key><date>2023-02-20T14:00:00Z</date>
+			<key>Persistent ID</key><string>AA00000000000002</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Location</key><string>file://localhost/music/track_b.mp3</string>
+		</dict>
+		<key>102</key>
+		<dict>
+			<key>Track ID</key><integer>102</integer>
+			<key>Name</key><string>Track C</string>
+			<key>Artist</key><string>Artist 1</string>
+			<key>Album</key><string>Album X</string>
+			<key>Genre</key><string>Deep House</string>
+			<key>BPM</key><integer>122</integer>
+			<key>Rating</key><integer>60</integer>
+			<key>Play Count</key><integer>5</integer>
+			<key>Year</key><integer>2019</integer>
+			<key>Track Number</key><integer>3</integer>
+			<key>Date Added</key><date>2022-06-10T08:00:00Z</date>
+			<key>Persistent ID</key><string>AA00000000000003</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Location</key><string>file://localhost/music/track_c.mp3</string>
+		</dict>
+		<key>103</key>
+		<dict>
+			<key>Track ID</key><integer>103</integer>
+			<key>Name</key><string>Track D</string>
+			<key>Artist</key><string>Artist 3</string>
+			<key>Album</key><string>Album Z</string>
+			<key>Genre</key><string>Trance</string>
+			<key>BPM</key><integer>140</integer>
+			<key>Rating</key><integer>100</integer>
+			<key>Play Count</key><integer>100</integer>
+			<key>Year</key><integer>2022</integer>
+			<key>Track Number</key><integer>1</integer>
+			<key>Date Added</key><date>2023-05-01T12:00:00Z</date>
+			<key>Persistent ID</key><string>AA00000000000004</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Location</key><string>file://localhost/music/track_d.mp3</string>
+			<key>Comments</key><string>Great track</string>
+		</dict>
+		<key>104</key>
+		<dict>
+			<key>Track ID</key><integer>104</integer>
+			<key>Name</key><string>Track E</string>
+			<key>Artist</key><string>Artist 4</string>
+			<key>Album</key><string>Album W</string>
+			<key>Genre</key><string>House</string>
+			<key>BPM</key><integer>126</integer>
+			<key>Rating</key><integer>40</integer>
+			<key>Year</key><integer>2018</integer>
+			<key>Track Number</key><integer>5</integer>
+			<key>Persistent ID</key><string>AA00000000000005</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Location</key><string>file://localhost/music/track_e.mp3</string>
+		</dict>
+		<key>105</key>
+		<dict>
+			<key>Track ID</key><integer>105</integer>
+			<key>Name</key><string>Podcast Episode 1</string>
+			<key>Artist</key><string>Podcaster</string>
+			<key>Genre</key><string>Podcast</string>
+			<key>Rating</key><integer>100</integer>
+			<key>Podcast</key><true/>
+			<key>Persistent ID</key><string>AA00000000000006</string>
+			<key>Kind</key><string>MPEG audio file</string>
+		</dict>
+		<key>106</key>
+		<dict>
+			<key>Track ID</key><integer>106</integer>
+			<key>Name</key><string>Track F</string>
+			<key>Artist</key><string>Artist 5</string>
+			<key>Album</key><string>Album V</string>
+			<key>Genre</key><string>Tech House</string>
+			<key>BPM</key><integer>130</integer>
+			<key>Rating</key><integer>80</integer>
+			<key>Persistent ID</key><string>AA00000000000007</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Location</key><string>file://localhost/music/track_f.mp3</string>
+			<key>Disabled</key><true/>
+		</dict>
+	</dict>
+	<key>Playlists</key>
+	<array>
+		<dict>
+			<key>Playlist ID</key><integer>1000</integer>
+			<key>Playlist Persistent ID</key><string>BB00000000000001</string>
+			<key>All Items</key><true/>
+			<key>Name</key><string>My Favorites</string>
+			<key>Playlist Items</key>
+			<array>
+				<dict>
+					<key>Track ID</key><integer>100</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>103</integer>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Playlist ID</key><integer>1001</integer>
+			<key>Playlist Persistent ID</key><string>BB00000000000002</string>
+			<key>All Items</key><true/>
+			<key>Folder</key><true/>
+			<key>Name</key><string>DJ</string>
+		</dict>
+		<dict>
+			<key>Playlist ID</key><integer>1002</integer>
+			<key>Parent Persistent ID</key><string>BB00000000000002</string>
+			<key>Playlist Persistent ID</key><string>BB00000000000003</string>
+			<key>All Items</key><true/>
+			<key>Name</key><string>House Set</string>
+			<key>Playlist Items</key>
+			<array>
+				<dict>
+					<key>Track ID</key><integer>100</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>102</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>104</integer>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Playlist ID</key><integer>1003</integer>
+			<key>Parent Persistent ID</key><string>BB00000000000002</string>
+			<key>Playlist Persistent ID</key><string>BB00000000000004</string>
+			<key>All Items</key><true/>
+			<key>Name</key><string>Exclude</string>
+			<key>Playlist Items</key>
+			<array>
+				<dict>
+					<key>Track ID</key><integer>104</integer>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

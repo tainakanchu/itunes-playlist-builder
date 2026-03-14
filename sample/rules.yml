@@ -1,0 +1,125 @@
+namespace: "_Generated"
+
+options:
+  removeExistingNamespace: true
+  failOnMissingPlaylist: true
+  dedupeTrackIds: true
+  caseSensitiveContains: false
+
+playlists:
+  # Base favorites: 4 stars and above (rating >= 80)
+  - name: "Base/Favorites/4stars+"
+    description: "Tracks rated 4 stars or higher"
+    match:
+      all:
+        - field: rating
+          gte: 80
+        - not:
+            field: podcast
+            equals: true
+    sort:
+      - field: artist
+        order: asc
+      - field: album
+        order: asc
+      - field: trackNumber
+        order: asc
+
+  # 5 stars only
+  - name: "Base/Favorites/5stars"
+    description: "Tracks rated 5 stars"
+    match:
+      all:
+        - field: rating
+          equals: 100
+        - not:
+            field: podcast
+            equals: true
+    sort:
+      - field: artist
+        order: asc
+      - field: name
+        order: asc
+
+  # Genre: House favorites
+  - name: "Genre/House/All"
+    description: "All House genre tracks with 4+ stars"
+    match:
+      all:
+        - inPlaylist:
+            source: generated
+            name: "Base/Favorites/4stars+"
+        - field: genre
+          contains: "House"
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+
+  # Genre: Techno favorites
+  - name: "Genre/Techno/All"
+    description: "All Techno genre tracks with 4+ stars"
+    match:
+      all:
+        - inPlaylist:
+            source: generated
+            name: "Base/Favorites/4stars+"
+        - field: genre
+          contains: "Techno"
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+
+  # Genre: Trance favorites
+  - name: "Genre/Trance/All"
+    description: "All Trance genre tracks with 4+ stars"
+    match:
+      all:
+        - inPlaylist:
+            source: generated
+            name: "Base/Favorites/4stars+"
+        - field: genre
+          contains: "Trance"
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+
+  # Recently added high-rated tracks
+  - name: "Base/HighPlayCount"
+    description: "Tracks played more than 10 times"
+    match:
+      all:
+        - field: playCount
+          gt: 10
+        - not:
+            field: podcast
+            equals: true
+    sort:
+      - field: playCount
+        order: desc
+      - field: artist
+        order: asc
+
+generators:
+  # BPM buckets for favorites
+  - type: bpmRange
+    basePath: "BPM/Favorites"
+    sourcePlaylist:
+      source: generated
+      name: "Base/Favorites/4stars+"
+    from: 70
+    to: 180
+    step: 5
+    pad: 3
+    sort:
+      - field: bpm
+        order: asc
+      - field: artist
+        order: asc
+      - field: name
+        order: asc
