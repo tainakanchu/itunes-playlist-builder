@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "generate:schema": "tsx scripts/generateSchema.ts",
     "test": "vitest run",
     "test:watch": "vitest"

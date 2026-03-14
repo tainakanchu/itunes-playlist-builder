@@ -143,6 +143,9 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
+# Turborepo
+.turbo
+
 # Project specific
 sample/output.xml
 .claude/memo/
