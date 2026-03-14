@@ -76,6 +76,20 @@ Options:
 
 ## Rules File Format
 
+A JSON Schema is provided for editor validation and autocompletion. Add this comment at the top of your YAML file:
+
+```yaml
+# yaml-language-server: $schema=./packages/core/rules.schema.json
+```
+
+If installed via npm:
+
+```yaml
+# yaml-language-server: $schema=./node_modules/@tainakanchu/itunes-playlist-builder-core/rules.schema.json
+```
+
+Requires the [YAML extension for VS Code](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) (or equivalent for your editor).
+
 ```yaml
 namespace: "_Generated"
 
@@ -176,17 +190,17 @@ match:
 
 `trackId`, `name`, `artist`, `albumArtist`, `composer`, `album`, `genre`, `bpm`, `rating`, `playCount`, `skipCount`, `year`, `trackNumber`, `discNumber`, `dateAdded`, `dateModified`, `location`, `comments`, `grouping`, `compilation`, `podcast`, `disabled`, `kind`
 
-## BPM Range Generator
+## Generators
 
-Creates playlists for each BPM bucket from a source playlist:
+### BPM Range
+
+Creates playlists for each BPM bucket (equal-step arithmetic):
 
 ```yaml
 generators:
   - type: bpmRange
     basePath: "BPM"
-    sourcePlaylist:
-      source: generated
-      name: "Base/Favorites/4stars+"
+    sourcePlaylist: { source: generated, name: "Base/Favorites/4stars+" }
     from: 80
     to: 180
     step: 5
@@ -194,6 +208,70 @@ generators:
 ```
 
 Generates: `BPM/080-084`, `BPM/085-089`, ..., `BPM/175-179`
+
+### Ranges
+
+Arbitrary named numeric ranges (overlapping OK):
+
+```yaml
+generators:
+  - type: ranges
+    basePath: "DJ/Zones"
+    sourcePlaylist: { source: generated, name: "Base/Favorites/4stars+" }
+    field: bpm
+    pad: 0
+    ranges:
+      - name: "House"
+        gte: 118
+        lt: 138
+      - name: "Techno"
+        gte: 125
+        lt: 148
+```
+
+If `name` is omitted, auto-generates from bounds (e.g., `120-137`). Supports `gte`, `gt`, `lt`, `lte`.
+
+### Tags
+
+Creates one playlist per tag value using `contains` matching:
+
+```yaml
+generators:
+  - type: tags
+    basePath: "Style"
+    sourcePlaylist: { source: generated, name: "Base/Favorites/4stars+" }
+    field: genre
+    values: ["House", "Techno", "Trance", "DnB"]
+```
+
+Generates: `Style/House`, `Style/Techno`, etc.
+
+### Templates
+
+Define generator parameters once and reuse across multiple sources:
+
+```yaml
+templates:
+  bpmBuckets:
+    type: bpmRange
+    from: 70
+    to: 180
+    step: 5
+    pad: 3
+    sort:
+      - field: bpm
+        order: asc
+
+generators:
+  - template: bpmBuckets
+    basePath: "Genre/House/BPM"
+    sourcePlaylist: { source: generated, name: "Genre/House/All" }
+  - template: bpmBuckets
+    basePath: "Genre/Techno/BPM"
+    sourcePlaylist: { source: generated, name: "Genre/Techno/All" }
+```
+
+Template types: `bpmRange`, `ranges`, `tags`. The `sort` in a template ref overrides the template's sort.
 
 ## Architecture
 

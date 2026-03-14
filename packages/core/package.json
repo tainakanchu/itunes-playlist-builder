@@ -8,10 +8,12 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./rules.schema.json": "./rules.schema.json"
   },
   "scripts": {
     "build": "tsc",
+    "generate:schema": "tsx scripts/generateSchema.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -24,6 +26,7 @@
     "@types/node": "^22.0.0",
     "@types/plist": "^3.0.5",
     "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "zod-to-json-schema": "^3.25.1"
   }
 }
