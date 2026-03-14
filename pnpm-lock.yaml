@@ -10,7 +10,7 @@ importers:
 
   packages/cli:
     dependencies:
-      '@itunes-playlist-builder/core':
+      '@tainakanchu/itunes-playlist-builder-core':
         specifier: workspace:*
         version: link:../core
       commander:

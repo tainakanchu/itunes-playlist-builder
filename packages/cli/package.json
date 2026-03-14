@@ -1,5 +1,5 @@
 {
-  "name": "@itunes-playlist-builder/cli",
+  "name": "@tainakanchu/itunes-playlist-builder-cli",
   "version": "0.1.0",
   "type": "module",
   "bin": {
@@ -10,7 +10,7 @@
     "start": "tsx src/cli.ts"
   },
   "dependencies": {
-    "@itunes-playlist-builder/core": "workspace:*",
+    "@tainakanchu/itunes-playlist-builder-core": "workspace:*",
     "commander": "^13.0.0"
   },
   "devDependencies": {

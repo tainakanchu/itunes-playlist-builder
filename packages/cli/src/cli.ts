@@ -6,7 +6,7 @@ import {
   previewLibrary,
   renderPreview,
   renderPreviewJson,
-} from "@itunes-playlist-builder/core";
+} from "@tainakanchu/itunes-playlist-builder-core";
 
 const program = new Command();
 
