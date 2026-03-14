@@ -1,6 +1,7 @@
 {
   "name": "itunes-playlist-builder",
   "private": true,
+  "license": "MIT",
   "engines": {
     "node": ">=20"
   },

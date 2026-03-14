@@ -1,6 +1,7 @@
 {
   "name": "@tainakanchu/itunes-playlist-builder-cli",
   "version": "0.2.1",
+  "license": "MIT",
   "type": "module",
   "files": [
     "dist"
