@@ -52,17 +52,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Lerna version
-        run: npx lerna version ${{ inputs.version }} --yes --no-private
-
       - name: Lerna publish (dry-run)
         if: ${{ inputs.dry-run }}
-        run: npx lerna publish from-git --yes --no-verify-access --dry-run
+        run: npx lerna publish ${{ inputs.version }} --yes --no-private --no-verify-access --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
       - name: Lerna publish
         if: ${{ !inputs.dry-run }}
-        run: npx lerna publish from-git --yes --no-verify-access
+        run: npx lerna publish ${{ inputs.version }} --yes --no-private --no-verify-access
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
