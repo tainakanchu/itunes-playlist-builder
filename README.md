@@ -79,13 +79,7 @@ Options:
 A JSON Schema is provided for editor validation and autocompletion. Add this comment at the top of your YAML file:
 
 ```yaml
-# yaml-language-server: $schema=./packages/core/rules.schema.json
-```
-
-If installed via npm:
-
-```yaml
-# yaml-language-server: $schema=./node_modules/@tainakanchu/itunes-playlist-builder-core/rules.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/tainakanchu/itunes-playlist-builder/master/packages/core/rules.schema.json
 ```
 
 Requires the [YAML extension for VS Code](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) (or equivalent for your editor).

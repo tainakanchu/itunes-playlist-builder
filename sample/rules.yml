@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../packages/core/rules.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/tainakanchu/itunes-playlist-builder/master/packages/core/rules.schema.json
 namespace: "_Generated"
 
 options:
