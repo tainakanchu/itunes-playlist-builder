@@ -5,6 +5,14 @@ import { TrackTable } from "./components/TrackTable";
 import { PlayerBar } from "./components/PlayerBar";
 import { useStore } from "./store/useStore";
 import * as api from "./invoke";
+import {
+  generateMockTracks,
+  generateMockPlaylists,
+  mockPlaybackState,
+} from "./mockData";
+
+// Detect if running inside Tauri
+const isTauri = "__TAURI_INTERNALS__" in window;
 
 export default function App() {
   const {
@@ -23,11 +31,31 @@ export default function App() {
 
   const PAGE_SIZE = 200;
   const pollRef = useRef<ReturnType<typeof setInterval>>(undefined);
+  const allMockTracks = useRef(generateMockTracks(200));
 
   const loadTracks = useCallback(
     async (reset = true) => {
       setIsLoading(true);
       try {
+        if (!isTauri) {
+          // Mock mode
+          let filtered = allMockTracks.current;
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            filtered = filtered.filter(
+              (t) =>
+                t.name?.toLowerCase().includes(q) ||
+                t.artist?.toLowerCase().includes(q) ||
+                t.album?.toLowerCase().includes(q) ||
+                t.genre?.toLowerCase().includes(q),
+            );
+          }
+          setTracks(filtered);
+          setHasMore(false);
+          setIsLoading(false);
+          return;
+        }
+
         const offset = reset ? 0 : tracks.length;
         let result;
 
@@ -71,25 +99,22 @@ export default function App() {
 
   // Load playlists on mount
   useEffect(() => {
+    if (!isTauri) {
+      setPlaylists(generateMockPlaylists());
+      setPlayback(mockPlaybackState);
+      return;
+    }
     api.getPlaylists().then(setPlaylists).catch(console.error);
   }, []);
 
-  // Poll playback state
+  // Poll playback state (Tauri only)
   useEffect(() => {
+    if (!isTauri) return;
+
     pollRef.current = setInterval(async () => {
       try {
         const state = await api.getPlaybackState();
         setPlayback(state);
-
-        // Auto-advance to next queue item if finished
-        if (
-          !state.isPlaying &&
-          state.currentTrackId !== null &&
-          state.positionMs >= state.durationMs &&
-          state.durationMs > 0
-        ) {
-          // Try to play next from queue - handled by playNext in PlayerBar
-        }
       } catch {
         // ignore polling errors
       }
@@ -114,10 +139,12 @@ export default function App() {
       }
       if (e.key === " " && !isInput) {
         e.preventDefault();
-        if (playback.isPlaying) {
-          api.pause();
-        } else if (playback.currentTrackId !== null) {
-          api.resume();
+        if (isTauri) {
+          if (playback.isPlaying) {
+            api.pause();
+          } else if (playback.currentTrackId !== null) {
+            api.resume();
+          }
         }
       }
     };
